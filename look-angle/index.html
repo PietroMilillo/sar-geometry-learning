@@ -1,0 +1,1112 @@
+<title>Look Angle</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+/* ---------- tokens: complete light palette on bare :root ---------- */
+:root{
+  --ground:#E9EDF2;  --panel:#FFFFFF;   --panel-2:#F3F6F9;
+  --ink:#131A22;     --muted:#5B6875;   --faint:#8A95A1;
+  --rule:#CFD7E0;    --rule-soft:#E2E8EF;
+  --los:#A9500F;     --los-soft:#F3E2D0;
+  --track:#0D6379;   --track-soft:#D6EAF0;
+  --layover:#B93C18; --shadow:#3B4263;
+  --good:#1D6F4A;    --warn:#8A6410;    --bad:#A32F20;
+  --stage:#20262E;   /* neutral behind imagery, both themes */
+  --shadow-1:0 1px 2px rgba(16,24,34,.06), 0 4px 14px rgba(16,24,34,.05);
+  --r:9px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1218;  --panel:#151C25;  --panel-2:#1B242F;
+    --ink:#E4EAF1;     --muted:#93A0AE;  --faint:#6C7A88;
+    --rule:#28323E;    --rule-soft:#1F2833;
+    --los:#F0A143;     --los-soft:#3A2C1A;
+    --track:#4BC6DD;   --track-soft:#12303A;
+    --layover:#F07A4B; --shadow:#9AA0C9;
+    --good:#5CC494;    --warn:#E0B355;   --bad:#F0806E;
+    --stage:#0A0E13;
+    --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1218;  --panel:#151C25;  --panel-2:#1B242F;
+  --ink:#E4EAF1;     --muted:#93A0AE;  --faint:#6C7A88;
+  --rule:#28323E;    --rule-soft:#1F2833;
+  --los:#F0A143;     --los-soft:#3A2C1A;
+  --track:#4BC6DD;   --track-soft:#12303A;
+  --layover:#F07A4B; --shadow:#9AA0C9;
+  --good:#5CC494;    --warn:#E0B355;   --bad:#F0806E;
+  --stage:#0A0E13;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ground); color:var(--ink);
+  font-family:Archivo, "Helvetica Neue", Arial, sans-serif;
+  font-size:14px; line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1420px; margin:0 auto; padding:22px 20px 60px}
+
+/* ---------- header ---------- */
+header.top{
+  display:flex; align-items:flex-end; justify-content:space-between;
+  gap:20px; flex-wrap:wrap; padding-bottom:16px;
+  border-bottom:1px solid var(--rule);
+}
+.brand h1{
+  font-size:clamp(26px,3.4vw,38px); font-weight:700; letter-spacing:-.024em;
+  margin:0; text-wrap:balance;
+}
+.brand .sub{
+  font-family:Newsreader, Georgia, serif; font-size:16px; color:var(--muted);
+  margin:5px 0 0; max-width:62ch;
+}
+.eyebrow{
+  font-family:"JetBrains Mono", ui-monospace, monospace; font-size:10.5px;
+  letter-spacing:.16em; text-transform:uppercase; color:var(--faint);
+  margin:0 0 6px;
+}
+.themebtn{
+  font:500 12px/1 Archivo, sans-serif; color:var(--muted);
+  background:var(--panel); border:1px solid var(--rule); border-radius:var(--r);
+  padding:8px 12px; cursor:pointer;
+}
+.themebtn:hover{color:var(--ink); border-color:var(--faint)}
+.themebtn:focus-visible{outline:2px solid var(--track); outline-offset:2px}
+
+/* ---------- scene strip ---------- */
+.strip{
+  display:flex; gap:9px; overflow-x:auto; padding:16px 2px 14px;
+  scrollbar-width:thin;
+}
+.chip{
+  flex:0 0 auto; display:flex; align-items:center; gap:9px;
+  background:var(--panel); border:1px solid var(--rule); border-radius:var(--r);
+  padding:8px 12px 8px 9px; cursor:pointer; text-align:left;
+  font:inherit; color:var(--ink); transition:border-color .12s, transform .12s;
+}
+.chip:hover{border-color:var(--faint)}
+.chip[aria-selected="true"]{
+  border-color:var(--track); box-shadow:inset 0 0 0 1px var(--track);
+}
+.chip:focus-visible{outline:2px solid var(--track); outline-offset:2px}
+.chip .glyph{width:26px; height:26px; flex:0 0 auto}
+.chip .nm{font-weight:600; font-size:12.5px; letter-spacing:-.01em; white-space:nowrap}
+.chip .mt{
+  font-family:"JetBrains Mono", monospace; font-size:10px; color:var(--muted);
+  white-space:nowrap; font-variant-numeric:tabular-nums;
+}
+
+/* ---------- main grid ---------- */
+.main{display:grid; grid-template-columns:minmax(0,1.32fr) minmax(0,1fr); gap:18px}
+@media (max-width:1040px){ .main{grid-template-columns:1fr} }
+.card{
+  background:var(--panel); border:1px solid var(--rule); border-radius:var(--r);
+  box-shadow:var(--shadow-1);
+}
+.card > .hd{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:11px 14px; border-bottom:1px solid var(--rule-soft); flex-wrap:wrap;
+}
+.card > .hd h2{
+  font-size:12px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--muted); margin:0;
+}
+
+/* ---------- stage ---------- */
+.segs{display:flex; gap:2px; background:var(--panel-2); border-radius:7px; padding:2px}
+.segs button{
+  font:500 11.5px/1 Archivo,sans-serif; color:var(--muted); background:none;
+  border:0; border-radius:5px; padding:6px 10px; cursor:pointer; white-space:nowrap;
+}
+.segs button[aria-pressed="true"]{background:var(--panel); color:var(--ink); box-shadow:var(--shadow-1)}
+.segs button:focus-visible{outline:2px solid var(--track); outline-offset:1px}
+
+.stage{position:relative; background:var(--stage); border-radius:0 0 var(--r) var(--r); overflow:hidden}
+.stage .frame{position:relative; width:100%; aspect-ratio:1/1}
+.stage img{
+  position:absolute; inset:0; width:100%; height:100%; object-fit:contain;
+  image-rendering:auto; user-select:none; -webkit-user-drag:none;
+}
+.stage img.under{z-index:1}
+.stage img.over{z-index:2}
+.stage svg.draw{position:absolute; inset:0; width:100%; height:100%; z-index:3; cursor:crosshair; touch-action:none}
+.stage .badge{
+  position:absolute; left:10px; top:10px; z-index:4;
+  font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.06em;
+  background:rgba(10,14,19,.72); color:#E8EEF5; padding:4px 8px; border-radius:5px;
+  pointer-events:none;
+}
+.stage .blend{
+  position:absolute; right:10px; top:10px; z-index:4; display:flex; align-items:center; gap:8px;
+  background:rgba(10,14,19,.72); padding:5px 10px; border-radius:5px;
+}
+.stage .blend label{font-family:"JetBrains Mono",monospace; font-size:9.5px; letter-spacing:.08em; color:#C3CDD8}
+.stage .blend input{width:92px; accent-color:#F0A143}
+
+/* ---------- question ---------- */
+.q .body{padding:14px}
+.q .prompt{
+  font-family:Newsreader, Georgia, serif; font-size:19px; line-height:1.4;
+  margin:0 0 6px; text-wrap:balance;
+}
+.q .hint{font-size:12.5px; color:var(--muted); margin:0 0 12px; font-family:Newsreader,Georgia,serif; font-style:italic}
+.row{display:flex; gap:8px; flex-wrap:wrap; align-items:center}
+button.act{
+  font:600 13px/1 Archivo,sans-serif; padding:10px 16px; border-radius:7px;
+  border:1px solid var(--track); background:var(--track); color:#fff; cursor:pointer;
+}
+button.act[disabled]{opacity:.42; cursor:not-allowed}
+button.ghost{
+  font:500 13px/1 Archivo,sans-serif; padding:10px 14px; border-radius:7px;
+  border:1px solid var(--rule); background:var(--panel); color:var(--muted); cursor:pointer;
+}
+button.ghost:hover:not([disabled]){color:var(--ink); border-color:var(--faint)}
+button:focus-visible{outline:2px solid var(--track); outline-offset:2px}
+
+.verdict{margin-top:13px; padding:12px 13px; border-radius:7px; border:1px solid var(--rule-soft); background:var(--panel-2)}
+.verdict .vh{display:flex; align-items:baseline; gap:9px; margin-bottom:6px; flex-wrap:wrap}
+.verdict .vt{font-weight:700; font-size:14px; letter-spacing:-.01em}
+.verdict .ve{font-family:"JetBrains Mono",monospace; font-size:11.5px; color:var(--muted); font-variant-numeric:tabular-nums}
+.verdict p{margin:0; font-family:Newsreader,Georgia,serif; font-size:14px; line-height:1.55; color:var(--ink)}
+.verdict.ok{border-color:color-mix(in srgb, var(--good) 40%, transparent)}
+.verdict.mid{border-color:color-mix(in srgb, var(--warn) 40%, transparent)}
+.verdict.no{border-color:color-mix(in srgb, var(--bad) 40%, transparent)}
+.verdict.ok .vt{color:var(--good)} .verdict.mid .vt{color:var(--warn)} .verdict.no .vt{color:var(--bad)}
+
+/* ---------- readouts ---------- */
+.kv{width:100%; border-collapse:collapse; font-family:"JetBrains Mono",monospace; font-size:11.5px}
+.kv td{padding:5px 0; border-bottom:1px solid var(--rule-soft); vertical-align:baseline}
+.kv td:first-child{color:var(--muted); padding-right:12px; white-space:nowrap}
+.kv td:last-child{text-align:right; font-variant-numeric:tabular-nums; font-weight:500}
+.kv tr:last-child td{border-bottom:0}
+.swatch{display:inline-block; width:8px; height:8px; border-radius:2px; margin-right:6px; vertical-align:baseline}
+
+.conv{padding:12px 14px 14px}
+.conv h3{font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); margin:0 0 4px}
+.conv p.lead{font-family:Newsreader,Georgia,serif; font-size:13.5px; color:var(--muted); margin:0 0 11px}
+.convrow{display:flex; align-items:baseline; justify-content:space-between; gap:10px; padding:7px 0; border-bottom:1px solid var(--rule-soft)}
+.convrow:last-child{border-bottom:0}
+.convrow .cn{font-size:12.5px; font-weight:600}
+.convrow .cd{font-size:11.5px; color:var(--muted); font-family:Newsreader,Georgia,serif; display:block; font-weight:400; margin-top:1px}
+.convrow .cv{font-family:"JetBrains Mono",monospace; font-size:13px; font-weight:500; font-variant-numeric:tabular-nums; white-space:nowrap}
+
+/* ---------- explorer ---------- */
+.explorer{margin-top:18px}
+.expgrid{display:grid; grid-template-columns:230px minmax(0,1fr); gap:0}
+@media (max-width:860px){ .expgrid{grid-template-columns:1fr} }
+.ctrls{padding:14px; border-right:1px solid var(--rule-soft)}
+@media (max-width:860px){ .ctrls{border-right:0; border-bottom:1px solid var(--rule-soft)} }
+.ctrl{margin-bottom:15px}
+.ctrl:last-child{margin-bottom:0}
+.ctrl .lab{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:5px}
+.ctrl .lab span:first-child{font-size:11.5px; font-weight:500}
+.ctrl .lab span:last-child{font-family:"JetBrains Mono",monospace; font-size:12px; font-variant-numeric:tabular-nums; color:var(--muted)}
+.ctrl input[type=range]{width:100%; accent-color:var(--track)}
+.ctrl .sc{font-size:10.5px; color:var(--faint); font-family:Newsreader,Georgia,serif; margin-top:3px; display:block}
+.xsec{padding:12px}
+.xsec canvas{width:100%; display:block}
+.states{display:flex; gap:7px; flex-wrap:wrap; margin-top:10px}
+.state{
+  font-family:"JetBrains Mono",monospace; font-size:10px; letter-spacing:.05em;
+  padding:4px 9px; border-radius:20px; border:1px solid var(--rule); color:var(--muted);
+}
+.state.on{font-weight:700}
+.state.lay.on{color:var(--layover); border-color:var(--layover); background:color-mix(in srgb, var(--layover) 12%, transparent)}
+.state.sh.on{color:var(--shadow); border-color:var(--shadow); background:color-mix(in srgb, var(--shadow) 14%, transparent)}
+.state.fs.on{color:var(--los); border-color:var(--los); background:color-mix(in srgb, var(--los) 12%, transparent)}
+
+#view3d{width:100%; display:block; touch-action:none; cursor:grab}
+#view3d:active{cursor:grabbing}
+
+footer.note{
+  margin-top:26px; padding-top:16px; border-top:1px solid var(--rule);
+  font-family:Newsreader,Georgia,serif; font-size:13px; color:var(--muted); max-width:78ch;
+}
+footer.note code{font-family:"JetBrains Mono",monospace; font-size:11.5px; color:var(--ink)}
+footer.note a{color:var(--track)}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap}
+@media (prefers-reduced-motion: reduce){ *{transition:none !important; animation:none !important} }
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <p class="eyebrow">Umbra X-band spotlight &middot; 1,157 scenes &middot; 230 targets</p>
+    <h1>Look Angle</h1>
+    <p class="sub">Every scene below is a real Umbra collect. The geometry is read from its
+      STAC sidecar, not invented &mdash; so when you draw the flight direction, you are
+      being marked against where the satellite actually was.</p>
+  </div>
+  <button class="themebtn" id="themeBtn" type="button">Theme</button>
+</header>
+
+<div class="strip" id="strip" role="tablist" aria-label="Scenes"></div>
+
+<div class="main">
+  <!-- ============ stage ============ -->
+  <section class="card" aria-label="Image">
+    <div class="hd">
+      <h2 id="stageTitle">Scene</h2>
+      <div class="segs" id="layers" role="group" aria-label="Image layer"></div>
+    </div>
+    <div class="stage">
+      <div class="frame" id="frame">
+        <img class="under" id="imgUnder" alt="">
+        <img class="over"  id="imgOver"  alt="SAR amplitude">
+        <svg class="draw" id="draw" viewBox="0 0 1000 1000" preserveAspectRatio="none" aria-label="Drawing surface"></svg>
+        <div class="badge" id="badge"></div>
+        <div class="blend" id="blendBox" hidden>
+          <label for="blend">SAR &rarr; OPTICAL</label>
+          <input type="range" id="blend" min="0" max="100" value="0">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ console ============ -->
+  <div style="display:flex; flex-direction:column; gap:18px; min-width:0">
+    <section class="card q" aria-label="Question">
+      <div class="hd"><h2>Your turn</h2><span class="ve" id="qcount"></span></div>
+      <div class="body">
+        <p class="prompt" id="prompt"></p>
+        <p class="hint" id="hint"></p>
+        <div class="row">
+          <button class="act" id="check" type="button" disabled>Check my answer</button>
+          <button class="ghost" id="clear" type="button" disabled>Clear</button>
+          <button class="ghost" id="next" type="button">Next scene</button>
+        </div>
+        <div id="verdict"></div>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Acquisition geometry in 3D">
+      <div class="hd">
+        <h2>Acquisition geometry</h2>
+        <div class="segs" role="group" aria-label="3D view">
+          <button type="button" id="spin" aria-pressed="false">Spin</button>
+          <button type="button" id="reset3d">Reset view</button>
+        </div>
+      </div>
+      <canvas id="view3d" width="760" height="470"></canvas>
+      <div style="padding:0 14px 14px">
+        <table class="kv" id="geomTable"></table>
+      </div>
+    </section>
+
+    <section class="card" aria-label="What this set covers">
+      <div class="conv">
+        <h3>What this set covers</h3>
+        <p class="lead" id="setCoverage"></p>
+        <p class="lead" id="sceneTerrain" style="margin-top:9px"></p>
+      </div>
+    </section>
+
+    <section class="card" aria-label="Squint conventions">
+      <div class="conv">
+        <h3>Three squint numbers, one geometry</h3>
+        <p class="lead">The sidecar reports the same squint three ways. They are different
+          reference frames, and one is signed &mdash; so a value copied from the wrong
+          field points the radar somewhere it never looked.</p>
+        <div id="convRows"></div>
+      </div>
+    </section>
+  </div>
+</div>
+
+<!-- ============ explorer ============ -->
+<section class="card explorer" aria-label="Angle explorer">
+  <div class="hd">
+    <h2>Explore &mdash; not graded</h2>
+    <span class="ve" style="font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--muted)" id="expNote"></span>
+  </div>
+  <div class="expgrid">
+    <div class="ctrls">
+      <div class="ctrl">
+        <div class="lab"><span>Incidence angle</span><span id="vInc"></span></div>
+        <input type="range" id="sInc" min="5" max="80" step="0.5">
+        <span class="sc">Measured from vertical. Grazing is what is left over.</span>
+      </div>
+      <div class="ctrl">
+        <div class="lab"><span>Squint off broadside</span><span id="vSq"></span></div>
+        <input type="range" id="sSq" min="-50" max="50" step="0.5">
+        <span class="sc">Negative squints forward along the track, positive aft.</span>
+      </div>
+      <div class="ctrl">
+        <div class="lab"><span>Terrain slope</span><span id="vSl"></span></div>
+        <input type="range" id="sSl" min="0" max="75" step="0.5">
+        <span class="sc">The hill in the cross-section, facing the radar.</span>
+      </div>
+      <div class="states">
+        <span class="state fs" id="stFs">FORESHORTENING</span>
+        <span class="state lay" id="stLay">LAYOVER</span>
+        <span class="state sh" id="stSh">SHADOW</span>
+      </div>
+      <button class="ghost" id="useScene" type="button" style="margin-top:12px;width:100%">Load this scene's angles</button>
+    </div>
+    <div class="xsec">
+      <canvas id="xsec" width="1120" height="470"></canvas>
+    </div>
+  </div>
+</section>
+
+<footer class="note" id="prov"></footer>
+</div>
+
+<script id="scene-data" type="application/json">[{"id":"Kilauea_20260801211920","target":"Kilauea","datetime":"2026-08-01T21:19:20.300000Z","platform":"Umbra-10","question":"flight_direction","note":"Descending pass over Kilauea. Its twin in this set is the opposite pass over the same ground - compare the two headings.","prompt":"Drag on the image to draw the satellite's direction of flight.","hint":"The ground track, not the look direction. Ascending and descending passes point opposite ways.","answer_deg":188.678391780756,"answer_label":"ground-track heading","images":{"sar":"img/Kilauea_20260801211920_sar.webp","sar_zoom":"img/Kilauea_20260801211920_sar_zoom.webp","opt":"img/Kilauea_20260801211920_opt.webp","opt_zoom":"img/Kilauea_20260801211920_opt_zoom.webp"},"geom":{"incidence":68.51129742633329,"grazing":21.488702573666718,"view_azimuth":98.46190795828127,"look_dir":278.46190795828124,"heading":188.678391780756,"broadside":278.678391780756,"squint_off_broadside":0.21648382247474274,"squint_engineering":89.78351617752526,"squint_exploitation":-0.21648382247474274,"look_side":"right","orbit_state":"descending","slant_range_m":1155320.9108617108},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":9.59286526747878,"res_az":1.0000000000001585,"res_rg":0.9999999999998839,"looks_az":1,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":5.16442820501931,"lat":19.457287376838508,"lon":-155.22790904037907,"span_m":5680.871025521241,"valid":0.7761636363636364,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":19.45143155537482,"zoom_lon":-155.24485861679878,"zoom_looks":3},"terrain":{"relief_m":386.88848876953125,"p90_slope":6.182311552832242,"h_ref":1125.8177486975208,"disp_max_m":84.74090237374173,"layover_pct":0.165,"shadow_pct":0.06666666666666667}},{"id":"Kilauea_20241206082039","target":"Kilauea","datetime":"2024-12-06T08:20:39.200000Z","platform":"Umbra-10","question":"flight_direction","note":"Ascending pass over Kilauea. Its twin in this set is the opposite pass over the same ground - compare the two headings.","prompt":"Drag on the image to draw the satellite's direction of flight.","hint":"The ground track, not the look direction. Ascending and descending passes point opposite ways.","answer_deg":345.94829869794967,"answer_label":"ground-track heading","images":{"sar":"img/Kilauea_20241206082039_sar.webp","sar_zoom":"img/Kilauea_20241206082039_sar_zoom.webp","opt":"img/Kilauea_20241206082039_opt.webp","opt_zoom":"img/Kilauea_20241206082039_opt_zoom.webp"},"geom":{"incidence":56.78108895200862,"grazing":33.21891104799138,"view_azimuth":84.08591349978492,"look_dir":264.0859134997849,"heading":345.94829869794967,"broadside":255.94829869794967,"squint_off_broadside":8.13761480183527,"squint_engineering":-81.86238519816473,"squint_exploitation":8.13761480183527,"look_side":"left","orbit_state":"ascending","slant_range_m":967387.1969804796},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":9.600004951818846,"res_az":0.33333300007497396,"res_rg":0.9999989998079843,"looks_az":3,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":4.990029562089345,"lat":19.41239874925701,"lon":-155.2751030735516,"span_m":5489.032518298279,"valid":0.8315140495867769,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":19.40798133910623,"zoom_lon":-155.2907405992701,"zoom_looks":3},"terrain":{"relief_m":253.9561767578125,"p90_slope":7.962969790603143,"h_ref":1114.7121797276695,"disp_max_m":105.70593251251469,"layover_pct":0.16444444444444445,"shadow_pct":0.18027777777777776}},{"id":"Fogo_20260804123352","target":"Fogo","datetime":"2026-08-04T12:33:52.200000Z","platform":"Umbra-10","question":"line_of_sight","note":"Near-broadside: the line of sight is almost exactly perpendicular to the ground track.","prompt":"Drag to draw the radar's line of sight, from the satellite's ground position toward the scene.","hint":"Its azimuth on the ground. Watch the squint - it is only perpendicular to the track at zero squint.","answer_deg":279.2388452402426,"answer_label":"ground-projected line of sight","images":{"sar":"img/Fogo_20260804123352_sar.webp","sar_zoom":"img/Fogo_20260804123352_sar_zoom.webp","opt":"img/Fogo_20260804123352_opt.webp","opt_zoom":"img/Fogo_20260804123352_opt_zoom.webp"},"geom":{"incidence":69.07867107524301,"grazing":20.921328924756992,"view_azimuth":99.23884524024261,"look_dir":279.2388452402426,"heading":189.2839025698196,"broadside":279.2839025698196,"squint_off_broadside":0.04505732957699138,"squint_engineering":89.95494267042301,"squint_exploitation":-0.04505732957699138,"look_side":"right","orbit_state":"descending","slant_range_m":1173950.9146426232},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":9.592896196711873,"res_az":0.9999999999999535,"res_rg":1.0000000000000344,"looks_az":1,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":5.21586945841268,"lat":14.994227356323734,"lon":-24.392491600676244,"span_m":5737.456404253948,"valid":0.7608619834710744,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":14.985231931633352,"zoom_lon":-24.372058491742777,"zoom_looks":3},"terrain":{"relief_m":2691.4620673656464,"p90_slope":37.375855892631996,"h_ref":1435.8677114407171,"disp_max_m":550.4327907121043,"layover_pct":0.2338888888888889,"shadow_pct":39.08916666666667}},{"id":"Reykjanes_20260309221723","target":"Reykjanes","datetime":"2026-03-09T22:17:23.100000Z","platform":"Umbra-07","question":"flight_direction","note":"Strongly squinted FORWARD. The look direction is nowhere near perpendicular to the track, so the usual perpendicular shortcut fails here.","prompt":"Drag on the image to draw the satellite's direction of flight.","hint":"The ground track, not the look direction. Ascending and descending passes point opposite ways.","answer_deg":346.7420065853785,"answer_label":"ground-track heading","images":{"sar":"img/Reykjanes_20260309221723_sar.webp","sar_zoom":"img/Reykjanes_20260309221723_sar_zoom.webp","opt":"img/Reykjanes_20260309221723_opt.webp","opt_zoom":"img/Reykjanes_20260309221723_opt_zoom.webp"},"geom":{"incidence":41.090086567286136,"grazing":48.909913432713864,"view_azimuth":212.52885027977845,"look_dir":32.52885027977845,"heading":346.7420065853785,"broadside":76.74200658537848,"squint_off_broadside":44.21315630560002,"squint_engineering":45.78684369439998,"squint_exploitation":-44.21315630560002,"look_side":"right","orbit_state":"ascending","slant_range_m":711698.3411202934},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":null,"res_az":1.0000000026965976,"res_rg":0.9999999974367071,"looks_az":1,"looks_rg":1,"pols":["HH"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":6.277162347023316,"lat":63.859634272903776,"lon":-22.40627661202214,"span_m":6904.8785817256485,"valid":0.5255818181818182,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":63.86238198843685,"zoom_lon":-22.446939926474666,"zoom_looks":3},"terrain":{"relief_m":226.02146339416504,"p90_slope":7.7211617795045955,"h_ref":112.7017383747604,"disp_max_m":132.29623794538,"layover_pct":0.08666666666666667,"shadow_pct":0.0}},{"id":"Reykjanes_20241208222005","target":"Reykjanes","datetime":"2024-12-08T22:20:05.300000Z","platform":"Umbra-08","question":"flight_direction","note":"Strongly squinted AFT - the opposite sign of the same convention.","prompt":"Drag on the image to draw the satellite's direction of flight.","hint":"The ground track, not the look direction. Ascending and descending passes point opposite ways.","answer_deg":334.2923167207844,"answer_label":"ground-track heading","images":{"sar":"img/Reykjanes_20241208222005_sar.webp","sar_zoom":"img/Reykjanes_20241208222005_sar_zoom.webp","opt":"img/Reykjanes_20241208222005_opt.webp","opt_zoom":"img/Reykjanes_20241208222005_opt_zoom.webp"},"geom":{"incidence":47.97827021227355,"grazing":42.02172978772645,"view_azimuth":107.12416425744848,"look_dir":287.12416425744846,"heading":334.2923167207844,"broadside":244.2923167207844,"squint_off_broadside":42.83184753666404,"squint_engineering":-47.16815246333596,"squint_exploitation":42.83184753666404,"look_side":"left","orbit_state":"ascending","slant_range_m":711398.7421780801},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":9.588148914722453,"res_az":0.3333330003031514,"res_rg":0.9999989991868259,"looks_az":3,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":5.683375591020428,"lat":63.88299627434492,"lon":-22.38396610818669,"span_m":6251.713150122471,"valid":0.6413157024793389,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":63.883810996809,"zoom_lon":-22.401829069830892,"zoom_looks":3},"terrain":{"relief_m":270.61650586128235,"p90_slope":13.79889579394476,"h_ref":159.1493487458166,"disp_max_m":146.42540589149309,"layover_pct":0.14666666666666667,"shadow_pct":0.012777777777777779}},{"id":"Reykjanes_20241204215257","target":"Reykjanes","datetime":"2024-12-04T21:52:57.699999Z","platform":"Umbra-05","question":"line_of_sight","note":"Steep look (low incidence). Relief is compressed and layover is likely on any slope steeper than the incidence angle.","prompt":"Drag to draw the radar's line of sight, from the satellite's ground position toward the scene.","hint":"Its azimuth on the ground. Watch the squint - it is only perpendicular to the track at zero squint.","answer_deg":80.29852230681757,"answer_label":"ground-projected line of sight","images":{"sar":"img/Reykjanes_20241204215257_sar.webp","sar_zoom":"img/Reykjanes_20241204215257_sar_zoom.webp","opt":"img/Reykjanes_20241204215257_opt.webp","opt_zoom":"img/Reykjanes_20241204215257_opt_zoom.webp"},"geom":{"incidence":14.975005931228907,"grazing":75.0249940687711,"view_azimuth":260.2985223068176,"look_dir":80.29852230681757,"heading":343.29382581102885,"broadside":73.29382581102885,"squint_off_broadside":7.004696495788721,"squint_engineering":97.00469649578872,"squint_exploitation":7.004696495788721,"look_side":"right","orbit_state":"ascending","slant_range_m":528628.3478210124},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":9.600005863350818,"res_az":0.3333329989397249,"res_rg":0.9999990031726775,"looks_az":3,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":5.2476111830288055,"lat":63.85999613304607,"lon":-22.430039190841576,"span_m":5772.372301331686,"valid":0.7521892561983471,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":63.85159279400142,"zoom_lon":-22.38634908018171,"zoom_looks":3},"terrain":{"relief_m":223.122251868248,"p90_slope":6.94762494881133,"h_ref":135.38239873288413,"disp_max_m":512.373042761561,"layover_pct":1.5222222222222221,"shadow_pct":0.0}},{"id":"Lassen_20260426055220","target":"Lassen","datetime":"2026-04-26T05:52:20.400000Z","platform":"Umbra-07","question":"line_of_sight","note":"Shallow grazing (high incidence). Long radar shadows; layover needs a very steep slope.","prompt":"Drag to draw the radar's line of sight, from the satellite's ground position toward the scene.","hint":"Its azimuth on the ground. Watch the squint - it is only perpendicular to the track at zero squint.","answer_deg":81.05428638914123,"answer_label":"ground-projected line of sight","images":{"sar":"img/Lassen_20260426055220_sar.webp","sar_zoom":"img/Lassen_20260426055220_sar_zoom.webp","opt":"img/Lassen_20260426055220_opt.webp","opt_zoom":"img/Lassen_20260426055220_opt_zoom.webp"},"geom":{"incidence":69.99818665615126,"grazing":20.001813343848745,"view_azimuth":261.0542863891412,"look_dir":81.05428638914123,"heading":355.62111051298376,"broadside":85.62111051298376,"squint_off_broadside":4.566824123842537,"squint_engineering":85.43317587615746,"squint_exploitation":-4.566824123842537,"look_side":"right","orbit_state":"ascending","slant_range_m":1284950.998230286},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":null,"res_az":1.0000000000725955,"res_rg":0.9999999999489833,"looks_az":1,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":5.195217339401444,"lat":40.49000136847463,"lon":-121.51000399862089,"span_m":5714.739073341589,"valid":0.7665206611570248,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":40.490504002462934,"zoom_lon":-121.50911142892636,"zoom_looks":3},"terrain":{"relief_m":1267.319580078125,"p90_slope":32.19445809753838,"h_ref":3078.319286715104,"disp_max_m":427.27841909753346,"layover_pct":0.1875,"shadow_pct":19.425833333333333}},{"id":"Villarrica_20260418013950","target":"Villarrica","datetime":"2026-04-18T01:39:50.400000Z","platform":"Umbra-07","question":"line_of_sight","note":"LEFT-looking. Most of this archive looks right, so the line of sight falls on the other side of the track.","prompt":"Drag to draw the radar's line of sight, from the satellite's ground position toward the scene.","hint":"Its azimuth on the ground. Watch the squint - it is only perpendicular to the track at zero squint.","answer_deg":265.97544196798435,"answer_label":"ground-projected line of sight","images":{"sar":"img/Villarrica_20260418013950_sar.webp","sar_zoom":"img/Villarrica_20260418013950_sar_zoom.webp","opt":"img/Villarrica_20260418013950_opt.webp","opt_zoom":"img/Villarrica_20260418013950_opt_zoom.webp"},"geom":{"incidence":69.59880247510013,"grazing":20.40119752489987,"view_azimuth":85.97544196798438,"look_dir":265.97544196798435,"heading":355.5543638502162,"broadside":265.5543638502162,"squint_off_broadside":0.4210781177681753,"squint_engineering":-89.57892188223182,"squint_exploitation":0.4210781177681753,"look_side":"left","orbit_state":"ascending","slant_range_m":1286418.3538547058},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":null,"res_az":0.9999999999999473,"res_rg":1.0000000000000417,"looks_az":1,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":4.852140886754668,"lat":-39.419999580608774,"lon":-71.92999414486714,"span_m":5337.354975430135,"valid":0.8788314049586777,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":-39.405869289144924,"zoom_lon":-71.93202026520169,"zoom_looks":3},"terrain":{"relief_m":1755.9320068359375,"p90_slope":29.532807647226115,"h_ref":2412.035106373136,"disp_max_m":488.1342778770718,"layover_pct":0.17777777777777778,"shadow_pct":16.108333333333334}},{"id":"Bezymianny_20260531224557","target":"Bezymianny","datetime":"2026-05-31T22:45:57.900000Z","platform":"Umbra-07","question":"layover","note":"Volcanic relief: layover pushes the summit toward the radar, not toward the sun.","prompt":"Drag from a summit or rooftop to show which way it is displaced in this image.","hint":"Tall things lean toward whatever illuminates them. The radar is not the sun.","answer_deg":113.94874131690067,"answer_label":"layover displacement","images":{"sar":"img/Bezymianny_20260531224557_sar.webp","sar_zoom":"img/Bezymianny_20260531224557_sar_zoom.webp","opt":"img/Bezymianny_20260531224557_opt.webp","opt_zoom":"img/Bezymianny_20260531224557_opt_zoom.webp"},"geom":{"incidence":46.24513481394608,"grazing":43.75486518605392,"view_azimuth":113.94874131690067,"look_dir":293.9487413169007,"heading":189.1672287447083,"broadside":279.16722874470827,"squint_off_broadside":14.781512572192383,"squint_engineering":104.78151257219238,"squint_exploitation":14.781512572192383,"look_side":"right","orbit_state":"descending","slant_range_m":753501.1922167342},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":9.582119498765206,"res_az":0.999999998867672,"res_rg":1.0000000010598826,"looks_az":1,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":5.997466043514823,"lat":55.97999683058718,"lon":160.5900088342238,"span_m":6597.212647866305,"valid":0.5753190082644628,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":55.99132983096093,"zoom_lon":160.57972918190248,"zoom_looks":3},"terrain":{"relief_m":3052.610595703125,"p90_slope":37.611702710435864,"h_ref":2700.401568202876,"disp_max_m":1634.6008857966467,"layover_pct":1.6905555555555556,"shadow_pct":0.21055555555555555}},{"id":"EEFIT_Manizales_20260909015032","target":"EEFIT Manizales","datetime":"2026-09-09T01:50:32.900000Z","platform":"Umbra-07","question":"layover","note":"Earthquake-response city scene. At this resolution whole buildings lay over toward the sensor.","prompt":"Drag from a summit or rooftop to show which way it is displaced in this image.","hint":"Tall things lean toward whatever illuminates them. The radar is not the sun.","answer_deg":111.44441582954789,"answer_label":"layover displacement","images":{"sar":"img/EEFIT_Manizales_20260909015032_sar.webp","sar_zoom":"img/EEFIT_Manizales_20260909015032_sar_zoom.webp","opt":"img/EEFIT_Manizales_20260909015032_opt.webp","opt_zoom":"img/EEFIT_Manizales_20260909015032_opt_zoom.webp"},"geom":{"incidence":44.64582745191941,"grazing":45.35417254808059,"view_azimuth":111.44441582954789,"look_dir":291.4444158295479,"heading":348.6257913906291,"broadside":258.6257913906291,"squint_off_broadside":32.81862443891879,"squint_engineering":-57.18137556108121,"squint_exploitation":32.81862443891879,"look_side":"left","orbit_state":"ascending","slant_range_m":728559.626983145},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":9.590589714468878,"res_az":0.9999999999754143,"res_rg":1.0000000000228086,"looks_az":1,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":5.891087539407134,"lat":5.059768236570145,"lon":-75.4703827573185,"span_m":6480.196293347847,"valid":0.5963628099173554,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":5.073152227560952,"zoom_lon":-75.45004962693929,"zoom_looks":3},"terrain":{"relief_m":896.5306396484375,"p90_slope":31.445048027585095,"h_ref":2265.6784901713313,"disp_max_m":461.07420370964354,"layover_pct":0.26111111111111107,"shadow_pct":0.05305555555555556}},{"id":"EEFIT_Quimbaya_20260909041438","target":"EEFIT Quimbaya","datetime":"2026-09-09T04:14:38.300000Z","platform":"Umbra-10","question":"line_of_sight","note":"A second city scene with different geometry - the same ground, a different look.","prompt":"Drag to draw the radar's line of sight, from the satellite's ground position toward the scene.","hint":"Its azimuth on the ground. Watch the squint - it is only perpendicular to the track at zero squint.","answer_deg":302.6402590229414,"answer_label":"ground-projected line of sight","images":{"sar":"img/EEFIT_Quimbaya_20260909041438_sar.webp","sar_zoom":"img/EEFIT_Quimbaya_20260909041438_sar_zoom.webp","opt":"img/EEFIT_Quimbaya_20260909041438_opt.webp","opt_zoom":"img/EEFIT_Quimbaya_20260909041438_opt_zoom.webp"},"geom":{"incidence":54.24309523858582,"grazing":35.75690476141418,"view_azimuth":122.64025902294141,"look_dir":302.6402590229414,"heading":348.36668574243015,"broadside":258.36668574243015,"squint_off_broadside":44.273573280511215,"squint_engineering":-45.726426719488785,"squint_exploitation":44.273573280511215,"look_side":"left","orbit_state":"ascending","slant_range_m":811999.1467006549},"sar":{"mode":"SPOTLIGHT","band":"X","freq_ghz":9.591873773886544,"res_az":0.9999999999887283,"res_rg":1.0000000000096243,"looks_az":1,"looks_rg":1,"pols":["VV"],"product_type":"GEC"},"raster":{"w":1100,"h":1100,"mpp":6.278773480363501,"lat":4.643839094713679,"lon":-75.75272271185648,"span_m":6906.650828399851,"valid":0.525104132231405,"zoom_mpp":1.0,"zoom_span_m":900.0,"zoom_lat":4.6553988875516605,"zoom_lon":-75.75218564846669,"zoom_looks":3},"terrain":{"relief_m":423.0205078125,"p90_slope":24.146266373751896,"h_ref":1361.6218220101687,"disp_max_m":178.57245197989516,"layover_pct":0.20305555555555554,"shadow_pct":0.044444444444444446}}]</script>
+<script>
+"use strict";
+const SCENES = JSON.parse(document.getElementById("scene-data").textContent);
+
+/* ---------------- helpers ---------------- */
+const D2R = Math.PI/180, R2D = 180/Math.PI;
+const n360 = a => ((a % 360) + 360) % 360;
+const adiff = (a,b) => { let d = (a-b+180)%360; if (d<0) d+=360; return d-180; };
+const fmt = (v,d=1) => (v===null||v===undefined||Number.isNaN(v)) ? "—" : v.toFixed(d);
+const deg = (v,d=1) => fmt(v,d)+"°";
+const signed = (v,d=1) => { const r = +(+v).toFixed(d); return (r>0?"+":r<0?"":"") + r.toFixed(d); };
+const $ = id => document.getElementById(id);
+const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+
+/* ---------------- state ---------------- */
+let idx = 0, layer = "sar", drawn = null, checked = false, dragging = false;
+let cam = {az: -0.62, el: 0.42}, spinning = false, spinRAF = 0;
+let exp = {inc: 35, sq: 0, slope: 30};
+
+/* ---------------- scene chips ---------------- */
+function chipGlyph(g){
+  // a 26px compass rose: teal = ground track, amber = line of sight
+  const p = (az,r0,r1) => {
+    const a = (az-90)*D2R;
+    return [13+Math.cos(a)*r0, 13+Math.sin(a)*r0, 13+Math.cos(a)*r1, 13+Math.sin(a)*r1];
+  };
+  const t = p(g.heading, 0, 10), l = p(g.look_dir, 0, 9);
+  return `<svg class="glyph" viewBox="0 0 26 26" aria-hidden="true">
+    <circle cx="13" cy="13" r="11" fill="none" stroke="var(--rule)" stroke-width="1"/>
+    <line x1="${t[0].toFixed(1)}" y1="${t[1].toFixed(1)}" x2="${t[2].toFixed(1)}" y2="${t[3].toFixed(1)}"
+          stroke="var(--track)" stroke-width="2" stroke-linecap="round"/>
+    <line x1="${l[0].toFixed(1)}" y1="${l[1].toFixed(1)}" x2="${l[2].toFixed(1)}" y2="${l[3].toFixed(1)}"
+          stroke="var(--los)" stroke-width="2" stroke-linecap="round" stroke-dasharray="2.5 2"/>
+    <circle cx="13" cy="13" r="1.6" fill="var(--ink)"/></svg>`;
+}
+function buildStrip(){
+  const s = $("strip");
+  s.innerHTML = SCENES.map((sc,i)=>{
+    const g = sc.geom;
+    return `<button class="chip" role="tab" data-i="${i}" aria-selected="${i===idx}">
+      ${chipGlyph(g)}
+      <span><span class="nm">${sc.target}</span><br>
+      <span class="mt">${g.orbit_state.slice(0,4).toUpperCase()} &middot; ${g.look_side.toUpperCase()} &middot; θ ${fmt(g.incidence,0)}° &middot; sq ${signed(g.squint_exploitation,0)}°</span></span>
+    </button>`;
+  }).join("");
+  s.querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>load(+b.dataset.i)));
+}
+
+/* ---------------- layers ---------------- */
+function buildLayers(){
+  const sc = SCENES[idx], im = sc.images, box = $("layers");
+  const opts = [["sar","SAR"]];
+  if (im.opt) opts.push(["opt","Optical"]);
+  if (im.sar_zoom) opts.push(["sar_zoom","Detail"]);
+  if (im.opt_zoom) opts.push(["opt_zoom","Detail optical"]);
+  box.innerHTML = opts.map(([k,l])=>`<button type="button" data-k="${k}" aria-pressed="${k===layer}">${l}</button>`).join("");
+  box.querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{ layer=b.dataset.k; paint(); }));
+}
+function paint(){
+  const sc = SCENES[idx], im = sc.images;
+  if (!im[layer]) layer = "sar";
+  const isZoom = layer.indexOf("zoom") >= 0;
+  const pair = isZoom ? ["sar_zoom","opt_zoom"] : ["sar","opt"];
+  const canBlend = !!(im[pair[0]] && im[pair[1]]);
+  $("blendBox").hidden = !canBlend;
+  const over = $("imgOver"), under = $("imgUnder");
+  if (canBlend){
+    // SAR sits on top; the slider dissolves it to reveal the optical beneath
+    under.src = im[pair[1]]; over.src = im[pair[0]];
+    const showingOptical = (layer === pair[1]);
+    if (showingOptical) $("blend").value = 100;
+    else if (+$("blend").value === 100) $("blend").value = 0;
+    over.style.opacity = String(1 - (+$("blend").value)/100);
+    under.style.display = "";
+  } else {
+    under.style.display = "none"; over.src = im[layer]; over.style.opacity = "1";
+  }
+  const r = sc.raster;
+  $("badge").textContent = isZoom
+    ? `${fmt(r.zoom_span_m,0)} m across · ${fmt(r.zoom_mpp,2)} m/px · ${r.zoom_looks}-look`
+    : `${fmt(r.span_m/1000,1)} km across · ${fmt(r.mpp,1)} m/px · north up`;
+  $("layers").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed", String(b.dataset.k===layer)));
+  redraw();
+}
+
+/* ---------------- drawing surface ---------------- */
+const SVGNS = "http://www.w3.org/2000/svg";
+function svgEl(t, attrs){
+  const e = document.createElementNS(SVGNS, t);
+  for (const k in attrs) e.setAttribute(k, attrs[k]);
+  return e;
+}
+function arrow(g, x1,y1,x2,y2, color, width, dash, label){
+  const ang = Math.atan2(y2-y1, x2-x1), L = Math.hypot(x2-x1, y2-y1);
+  if (L < 2) return;
+  const hl = Math.min(34, Math.max(16, L*0.17)), hw = hl*0.55;
+  const bx = x2 - Math.cos(ang)*hl, by = y2 - Math.sin(ang)*hl;
+  const line = svgEl("line", {x1,y1,x2:bx,y2:by, stroke:color, "stroke-width":width, "stroke-linecap":"round"});
+  if (dash) line.setAttribute("stroke-dasharray", dash);
+  g.appendChild(line);
+  const px = -Math.sin(ang), py = Math.cos(ang);
+  g.appendChild(svgEl("polygon", {
+    points:`${x2},${y2} ${bx+px*hw/2},${by+py*hw/2} ${bx-px*hw/2},${by-py*hw/2}`,
+    fill:color }));
+  g.appendChild(svgEl("circle", {cx:x1, cy:y1, r:width*1.4, fill:color}));
+  if (label){
+    const lx = x2 + Math.cos(ang)*26, ly = y2 + Math.sin(ang)*26;
+    const t = svgEl("text", {x:lx, y:ly, fill:color, "font-family":"'JetBrains Mono', monospace",
+      "font-size":"26", "font-weight":"700", "text-anchor": lx>500?"end":"start",
+      "dominant-baseline":"middle", "paint-order":"stroke", stroke:"rgba(8,11,15,.78)", "stroke-width":"5"});
+    t.textContent = label;
+    g.appendChild(t);
+  }
+}
+function compass(g){
+  // north arrow + scale bar, drawn in the 1000x1000 user space
+  const x = 940, y = 80;
+  g.appendChild(svgEl("line", {x1:x, y1:y+44, x2:x, y2:y-30, stroke:"#E8EEF5", "stroke-width":4, "stroke-linecap":"round"}));
+  g.appendChild(svgEl("polygon", {points:`${x},${y-42} ${x-9},${y-22} ${x+9},${y-22}`, fill:"#E8EEF5"}));
+  const t = svgEl("text", {x, y:y+62, fill:"#E8EEF5", "font-family":"'JetBrains Mono',monospace",
+    "font-size":"22","font-weight":"700","text-anchor":"middle"});
+  t.textContent = "N"; g.appendChild(t);
+
+  const sc = SCENES[idx], r = sc.raster;
+  const isZoom = layer.indexOf("zoom") >= 0;
+  const spanM = isZoom ? r.zoom_span_m : r.span_m;
+  // a round number of metres that lands near a fifth of the frame
+  const target = spanM/5;
+  const mag = Math.pow(10, Math.floor(Math.log10(target)));
+  const bar = [1,2,5,10].map(m=>m*mag).reduce((a,b)=>Math.abs(b-target)<Math.abs(a-target)?b:a);
+  const w = bar/spanM*1000, bx = 42, by = 952;
+  g.appendChild(svgEl("line",{x1:bx,y1:by,x2:bx+w,y2:by,stroke:"#E8EEF5","stroke-width":5,"stroke-linecap":"butt"}));
+  g.appendChild(svgEl("line",{x1:bx,y1:by-9,x2:bx,y2:by+9,stroke:"#E8EEF5","stroke-width":5}));
+  g.appendChild(svgEl("line",{x1:bx+w,y1:by-9,x2:bx+w,y2:by+9,stroke:"#E8EEF5","stroke-width":5}));
+  const s2 = svgEl("text",{x:bx, y:by-18, fill:"#E8EEF5","font-family":"'JetBrains Mono',monospace",
+    "font-size":"21","font-weight":"700"});
+  s2.textContent = bar>=1000 ? (bar/1000)+" km" : bar+" m";
+  g.appendChild(s2);
+}
+function redraw(){
+  const svg = $("draw");
+  svg.innerHTML = "";
+  const g = svgEl("g", {});
+  svg.appendChild(g);
+  compass(g);
+  const sc = SCENES[idx];
+  if (drawn){
+    const col = checked ? "#9AA6B4" : "#FFFFFF";
+    arrow(g, drawn.x1, drawn.y1, drawn.x2, drawn.y2, col, 7, null,
+          checked ? "yours " + deg(n360(drawn.az),0) : deg(n360(drawn.az),0));
+  }
+  if (checked){
+    // the true answer, anchored at the same start point so the two compare directly
+    const cx = drawn ? drawn.x1 : 500, cy = drawn ? drawn.y1 : 500;
+    const L = drawn ? Math.max(180, Math.hypot(drawn.x2-drawn.x1, drawn.y2-drawn.y1)) : 300;
+    const a = (sc.answer_deg)*D2R;
+    const ex = cx + Math.sin(a)*L, ey = cy - Math.cos(a)*L;
+    const col = sc.question === "flight_direction" ? css("--track")
+              : sc.question === "layover" ? css("--layover") : css("--los");
+    arrow(g, cx, cy, ex, ey, col, 8, null, deg(sc.answer_deg,0));
+  }
+}
+function evToUser(ev){
+  const rect = $("draw").getBoundingClientRect();
+  const cx = (ev.touches ? ev.touches[0].clientX : ev.clientX) - rect.left;
+  const cy = (ev.touches ? ev.touches[0].clientY : ev.clientY) - rect.top;
+  return [cx/rect.width*1000, cy/rect.height*1000];
+}
+function bindDraw(){
+  const svg = $("draw");
+  const down = ev => {
+    if (checked) return;
+    ev.preventDefault();
+    const [x,y] = evToUser(ev);
+    dragging = true; drawn = {x1:x, y1:y, x2:x, y2:y, az:0};
+    redraw();
+  };
+  const move = ev => {
+    if (!dragging || !drawn) return;
+    ev.preventDefault();
+    const [x,y] = evToUser(ev);
+    drawn.x2 = x; drawn.y2 = y;
+    // the raster is north-up with equal metres per pixel in both axes, so the
+    // screen vector converts straight to a geographic azimuth
+    drawn.az = n360(Math.atan2(x-drawn.x1, -(y-drawn.y1))*R2D);
+    redraw();
+    const ok = Math.hypot(drawn.x2-drawn.x1, drawn.y2-drawn.y1) > 40;
+    $("check").disabled = !ok; $("clear").disabled = false;
+  };
+  const up = () => { dragging = false; };
+  svg.addEventListener("pointerdown", down);
+  window.addEventListener("pointermove", move);
+  window.addEventListener("pointerup", up);
+  svg.addEventListener("touchstart", down, {passive:false});
+  window.addEventListener("touchmove", move, {passive:false});
+  window.addEventListener("touchend", up);
+}
+
+/* ---------------- grading ---------------- */
+function grade(){
+  const sc = SCENES[idx];
+  const err = adiff(drawn.az, sc.answer_deg), ae = Math.abs(err);
+  const flipped = Math.abs(Math.abs(err)-180) < 30;
+  const g = sc.geom;
+  let cls, title, text;
+  if (ae <= 12){ cls="ok"; title="That is the geometry."; }
+  else if (ae <= 30){ cls="ok"; title="Close enough to be right."; }
+  else if (ae <= 55){ cls="mid"; title="The right idea, off by a fair margin."; }
+  else if (flipped){ cls="no"; title="Correct line, wrong way along it."; }
+  else { cls="no"; title="Not this one."; }
+
+  const side = g.look_side === "right" ? "right" : "left";
+  const sq = g.squint_off_broadside;
+  if (sc.question === "flight_direction"){
+    text = `The ground track runs <b>${deg(g.heading,1)}</b>, which is what
+      <code>sat:orbit_state = ${g.orbit_state}</code> looks like on the ground. It comes from the
+      line of sight, <b>${deg(g.look_dir,1)}</b>, rotated back by the engineering squint
+      <b>${deg(g.squint_engineering,1)}</b>. ` +
+      (flipped ? `You drew the track itself correctly and then went down it backwards &mdash; that is the
+        difference between an ascending and a descending pass.`
+      : ae<=30 ? `Note it is <i>not</i> perpendicular to the look direction here: the squint is
+        ${deg(sq,1)} off broadside.`
+      : `The trap is assuming the radar looks straight out sideways. At ${deg(sq,1)} off broadside it does not.`);
+  } else if (sc.question === "line_of_sight"){
+    text = `The line of sight lands at <b>${deg(g.look_dir,1)}</b> on the ground, straight from
+      <code>view:azimuth ${fmt(g.view_azimuth,2)}°</code> turned around by 180°.
+      Looking <b>${side}</b> of a track heading ${deg(g.heading,1)}, pure broadside would be
+      ${deg(g.broadside,1)}; the ${deg(sq,1)} squint moves it to where it actually is. ` +
+      (flipped ? `You have the correct line but pointed it back at the satellite rather than down at the ground.` : ``);
+  } else {
+    text = `Relief displaces toward the sensor, along <b>${deg(g.view_azimuth,1)}</b> &mdash;
+      the reverse of the line of sight. That happens at <i>every</i> slope: the shift is
+      (h &minus; h_ref)&thinsp;&middot;&thinsp;cot&thinsp;${deg(g.incidence,0)}, which here reaches
+      ${sc.terrain?fmt(sc.terrain.disp_max_m,0)+" m":"hundreds of metres"}. Full layover &mdash; the slope
+      imaging inside out &mdash; needs more than that: a slope steeper than the
+      ${deg(g.incidence,1)} incidence${sc.terrain&&sc.terrain.layover_pct<5
+        ? `, which only ${fmt(sc.terrain.layover_pct,2)}% of this scene reaches`:``}. ` +
+      (flipped ? `You drew it leaning away from the radar, which is where the <i>shadow</i> goes, not the summit.` : ``);
+  }
+  $("verdict").innerHTML =
+    `<div class="verdict ${cls}"><div class="vh"><span class="vt">${title}</span>
+     <span class="ve">you ${deg(n360(drawn.az),0)} &nbsp;&middot;&nbsp; actual ${deg(sc.answer_deg,0)} &nbsp;&middot;&nbsp; off by ${deg(ae,0)}</span></div>
+     <p>${text}</p></div>`;
+}
+
+/* ---------------- readouts ---------------- */
+function fillGeom(){
+  const sc = SCENES[idx], g = sc.geom, s = sc.sar, r = sc.raster;
+  const sw = c => `<span class="swatch" style="background:${c}"></span>`;
+  $("geomTable").innerHTML = `
+    <tr><td>${sw("var(--track)")}Ground track heading</td><td>${deg(g.heading,1)}</td></tr>
+    <tr><td>${sw("var(--los)")}Line of sight (ground)</td><td>${deg(g.look_dir,1)}</td></tr>
+    <tr><td>Broadside would be</td><td>${deg(g.broadside,1)}</td></tr>
+    <tr><td>Incidence / grazing</td><td>${deg(g.incidence,1)} / ${deg(g.grazing,1)}</td></tr>
+    <tr><td>Look side</td><td>${g.look_side}</td></tr>
+    <tr><td>Orbit state</td><td>${g.orbit_state}</td></tr>
+    <tr><td>Slant range</td><td>${fmt(g.slant_range_m/1000,1)} km</td></tr>
+    <tr><td>Mode / band</td><td>${s.mode} &middot; ${s.band}${s.freq_ghz?" "+fmt(s.freq_ghz,2)+" GHz":""}</td></tr>
+    <tr><td>Resolution az / rg</td><td>${fmt(s.res_az,2)} / ${fmt(s.res_rg,2)} m</td></tr>
+    <tr><td>Polarisation</td><td>${(s.pols||[]).join(", ")} &middot; ${s.product_type}</td></tr>
+    <tr><td>Acquired</td><td>${(sc.datetime||"").slice(0,16).replace("T"," ")}Z</td></tr>
+    <tr><td>Platform</td><td>${sc.platform}</td></tr>`;
+
+  // Set-level contrast note: say what the 11 scenes deliberately span, so the
+  // set reads as a curriculum rather than a sample.
+  const inc = SCENES.map(z=>z.geom.incidence), sq = SCENES.map(z=>z.geom.squint_exploitation);
+  const tc = {}; SCENES.forEach(z=>{ tc[z.target]=(tc[z.target]||0)+1; });
+  const rep = Object.keys(tc).filter(k=>tc[k]>1);
+  const nL = SCENES.filter(z=>z.geom.look_side==="left").length;
+  $("setCoverage").innerHTML =
+    `These ${SCENES.length} scenes are chosen for contrast, not sampled at random. `+
+    `They span <b>${fmt(Math.min(...inc),0)}–${fmt(Math.max(...inc),0)}°</b> incidence and `+
+    `<b>${signed(Math.min(...sq),0)}° to ${signed(Math.max(...sq),0)}°</b> squint, across `+
+    `${Object.keys(tc).length} targets, with ${nL} left-looking and ${SCENES.length-nL} right-looking. `+
+    (rep.length ? `${rep.join(" and ")} appear more than once on purpose &mdash; the same ground from `+
+      `opposite passes, so the answer has to come from the metadata rather than from the picture.` : ``);
+
+  // Per-scene terrain response. The direction questions stand whatever the
+  // terrain does; the layover question has a threshold, and it matters whether
+  // this scene actually crosses it.
+  const T = sc.terrain;
+  if (T){
+    let msg = `Under this geometry COP30 puts the peak terrain displacement at `+
+      `<b>${fmt(T.disp_max_m,0)} m</b> (relief ${fmt(T.relief_m,0)} m, 90th-percentile slope `+
+      `${deg(T.p90_slope,0)}). `;
+    if (sc.question === "layover"){
+      msg += T.layover_pct >= 5
+        ? `True layover covers ${fmt(T.layover_pct,1)}% of the scene, so the fold is genuinely there.`
+        : `True layover needs a slope steeper than the ${deg(g.incidence,0)} incidence, and only `+
+          `<b>${fmt(T.layover_pct,2)}%</b> of this scene qualifies. The displacement you are asked to `+
+          `draw is real everywhere &mdash; every point above the reference plane leans toward the sensor `+
+          `&mdash; but the order-reversing fold is marginal here.` +
+          (sc.target.indexOf("EEFIT") >= 0
+            ? ` In the city the <i>buildings</i> do lay over, because a wall is vertical and 90° beats any `+
+              `incidence angle; COP30 is a 30 m model and cannot see them.` : ``);
+    } else {
+      msg += T.shadow_pct >= 5
+        ? `Shadow covers ${fmt(T.shadow_pct,0)}% of it at this grazing angle.`
+        : `Neither layover nor shadow is significant at this look angle.`;
+    }
+    $("sceneTerrain").innerHTML = msg;
+  } else $("sceneTerrain").textContent = "";
+
+  const e = g.squint_engineering, x = g.squint_exploitation, o = g.squint_off_broadside;
+  const sgn = g.look_side === "right" ? 1 : -1;
+  $("convRows").innerHTML = `
+    <div class="convrow"><span><span class="cn">Off broadside</span>
+      <span class="cd">Unsigned. How far from perpendicular, nothing about which way.</span></span>
+      <span class="cv">${deg(o,3)}</span></div>
+    <div class="convrow"><span><span class="cn">Exploitation</span>
+      <span class="cd">Signed: negative squints forward along the track, positive aft.</span></span>
+      <span class="cv">${signed(x,3)}°</span></div>
+    <div class="convrow"><span><span class="cn">Engineering</span>
+      <span class="cd">Measured from the velocity vector, and negated on a left-looking pass.
+        Here <code>${sgn>0?"+":"−"}90° ${x>=0?"+":"−"} ${deg(Math.abs(x),3)}</code>.</span></span>
+      <span class="cv">${deg(e,3)}</span></div>
+    <div class="convrow"><span><span class="cn">This tool draws</span>
+      <span class="cd">Heading = line of sight &minus; engineering squint. That form is the
+        only one that holds on both look sides.</span></span>
+      <span class="cv">${deg(g.look_dir,1)} &minus; ${deg(e,1)}</span></div>`;
+}
+
+/* ---------------- 3D acquisition geometry ---------------- */
+function project(p, C){
+  const ca=Math.cos(C.az), sa=Math.sin(C.az);
+  const x = p[0]*ca - p[1]*sa, y0 = p[0]*sa + p[1]*ca, z = p[2];
+  const ce=Math.cos(C.el), se=Math.sin(C.el);
+  const y = y0*ce - z*se, zz = y0*se + z*ce;
+  const d = 5.2 + y, f = 690/Math.max(d, .35);
+  return [C.cx + x*f, C.cy - zz*f, d];
+}
+function draw3d(){
+  const cv = $("view3d"), ctx = cv.getContext("2d");
+  const DPR = Math.min(2, window.devicePixelRatio||1);
+  const W = cv.clientWidth||760, H = 470;
+  if (cv.width !== W*DPR){ cv.width = W*DPR; cv.height = H*DPR; }
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.clearRect(0,0,W,H);
+  const C = {az:cam.az, el:cam.el, cx:W*0.5, cy:H*0.60};
+  const P = p => project(p, C);
+
+  const sc = SCENES[idx], g = sc.geom;
+  const inkC = css("--ink"), muteC = css("--muted"), ruleC = css("--rule");
+  const losC = css("--los"), trkC = css("--track");
+
+  // ground plane grid
+  const E = 1.35, N = 9;
+  ctx.lineWidth = 1;
+  for (let i=0;i<=N;i++){
+    const t = -E + 2*E*i/N;
+    ctx.strokeStyle = ruleC;
+    ctx.globalAlpha = (i===0||i===N) ? 0.95 : ((i%2===0)?0.7:0.35);
+    let a = P([t,-E,0]), b = P([t,E,0]);
+    ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+    a = P([-E,t,0]); b = P([E,t,0]);
+    ctx.beginPath(); ctx.moveTo(a[0],a[1]); ctx.lineTo(b[0],b[1]); ctx.stroke();
+  }
+  ctx.globalAlpha = 1;
+
+  // north arrow on the ground
+  const n0 = P([0,0,0]), n1 = P([0,E*0.92,0]);
+  ctx.strokeStyle = muteC; ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.moveTo(n0[0],n0[1]); ctx.lineTo(n1[0],n1[1]); ctx.stroke();
+  ctx.fillStyle = muteC; ctx.font = "700 12px 'JetBrains Mono', monospace";
+  ctx.textAlign = "center"; ctx.fillText("N", n1[0], n1[1]-7);
+
+  // satellite position from the true look geometry
+  const az = g.view_azimuth*D2R, inc = g.incidence*D2R, R = 2.45;
+  const S = [Math.sin(inc)*Math.sin(az)*R, Math.sin(inc)*Math.cos(az)*R, Math.cos(inc)*R];
+  const Sg = [S[0], S[1], 0];
+  const hd = g.heading*D2R;
+  const V = [S[0]+Math.sin(hd)*0.72, S[1]+Math.cos(hd)*0.72, S[2]];
+  const Vg = [Sg[0]+Math.sin(hd)*0.72, Sg[1]+Math.cos(hd)*0.72, 0];
+  // broadside points from the platform's ground position toward the look side,
+  // i.e. along the broadside azimuth - the squint is the gap between this and
+  // the actual line of sight
+  const bd = g.broadside*D2R;
+  const Blen = Math.hypot(Sg[0], Sg[1]) * 0.95;
+  const B = [Sg[0]+Math.sin(bd)*Blen, Sg[1]+Math.cos(bd)*Blen, 0];
+
+  const seg = (a,b,col,w,dash,alpha)=>{
+    const A=P(a), Bp=P(b);
+    ctx.save(); ctx.globalAlpha = alpha===undefined?1:alpha;
+    ctx.strokeStyle=col; ctx.lineWidth=w;
+    ctx.setLineDash(dash||[]);
+    ctx.beginPath(); ctx.moveTo(A[0],A[1]); ctx.lineTo(Bp[0],Bp[1]); ctx.stroke();
+    ctx.restore();
+  };
+  const head = (a,b,col,size)=>{
+    const A=P(a), Bp=P(b), an=Math.atan2(Bp[1]-A[1], Bp[0]-A[0]);
+    ctx.fillStyle=col; ctx.beginPath();
+    ctx.moveTo(Bp[0],Bp[1]);
+    ctx.lineTo(Bp[0]-Math.cos(an-0.4)*size, Bp[1]-Math.sin(an-0.4)*size);
+    ctx.lineTo(Bp[0]-Math.cos(an+0.4)*size, Bp[1]-Math.sin(an+0.4)*size);
+    ctx.closePath(); ctx.fill();
+  };
+  const lbl = (p,t,col,dx,dy)=>{
+    const A=P(p); ctx.fillStyle=col;
+    ctx.font="700 11px 'JetBrains Mono', monospace"; ctx.textAlign="left";
+    ctx.fillText(t, A[0]+(dx||6), A[1]+(dy||0));
+  };
+
+  // track line through the satellite's ground point
+  seg([Sg[0]-Math.sin(hd)*1.5, Sg[1]-Math.cos(hd)*1.5, 0],
+      [Sg[0]+Math.sin(hd)*1.5, Sg[1]+Math.cos(hd)*1.5, 0], trkC, 1.5, [5,4], .55);
+  // broadside reference
+  seg(Sg, B, muteC, 1.3, [3,4], .75);
+  lbl(B, "broadside", muteC, 4, -4);
+  // nadir drop and ground projection of the line of sight
+  seg(S, Sg, muteC, 1.2, [2,4], .7);
+  seg(Sg, [0,0,0], losC, 1.6, [6,4], .8);
+  // the line of sight itself
+  seg(S, [0,0,0], losC, 2.6);
+  head(S, [0,0,0], losC, 9);
+  lbl([S[0]*0.52, S[1]*0.52, S[2]*0.52], "LOS", losC, 8, -4);
+  // velocity
+  seg(S, V, trkC, 2.8); head(S, V, trkC, 9);
+  lbl(V, "v", trkC, 6, -2);
+  seg(Sg, Vg, trkC, 1.4, [4,3], .6);
+
+  // incidence arc at the target, in the vertical plane containing the LOS
+  ctx.strokeStyle = losC; ctx.lineWidth = 1.4; ctx.setLineDash([]);
+  ctx.beginPath();
+  for (let i=0;i<=24;i++){
+    const t = inc*i/24, rr = 0.62;
+    const p = P([Math.sin(t)*Math.sin(az)*rr, Math.sin(t)*Math.cos(az)*rr, Math.cos(t)*rr]);
+    i ? ctx.lineTo(p[0],p[1]) : ctx.moveTo(p[0],p[1]);
+  }
+  ctx.stroke();
+  seg([0,0,0],[0,0,0.85], muteC, 1.2, [2,3], .7);
+  const mid = P([Math.sin(inc/2)*Math.sin(az)*0.72, Math.sin(inc/2)*Math.cos(az)*0.72, Math.cos(inc/2)*0.72]);
+  ctx.fillStyle = losC; ctx.font="700 11px 'JetBrains Mono',monospace"; ctx.textAlign="center";
+  ctx.fillText("θ "+fmt(g.incidence,0)+"°", mid[0], mid[1]);
+
+  // squint arc on the ground at the platform's nadir point: broadside -> LOS.
+  // Arc points are built as [sin(az), cos(az)] so the sweep parameter is an
+  // azimuth in radians, not a canvas angle.
+  const a0 = bd, a1 = g.look_dir*D2R;
+  let sweep = a1 - a0; while (sweep>Math.PI) sweep-=2*Math.PI; while (sweep<-Math.PI) sweep+=2*Math.PI;
+  ctx.strokeStyle = css("--layover"); ctx.lineWidth = 1.8; ctx.setLineDash([]);
+  ctx.beginPath();
+  for (let i=0;i<=24;i++){
+    const t = a0 + sweep*i/24, rr = Blen*0.42;
+    const p = P([Sg[0]+Math.sin(t)*rr, Sg[1]+Math.cos(t)*rr, 0]);
+    i ? ctx.lineTo(p[0],p[1]) : ctx.moveTo(p[0],p[1]);
+  }
+  ctx.stroke();
+  const sm = P([Sg[0]+Math.sin(a0+sweep/2)*Blen*0.55, Sg[1]+Math.cos(a0+sweep/2)*Blen*0.55, 0]);
+  ctx.fillStyle = css("--layover"); ctx.textAlign="center";
+  ctx.fillText("squint "+fmt(Math.abs(g.squint_off_broadside),0)+"°", sm[0], sm[1]);
+
+  // target and satellite markers
+  const T = P([0,0,0]);
+  ctx.fillStyle = inkC; ctx.beginPath(); ctx.arc(T[0],T[1],4,0,7); ctx.fill();
+  const Sp = P(S);
+  ctx.fillStyle = trkC; ctx.beginPath(); ctx.arc(Sp[0],Sp[1],6.5,0,7); ctx.fill();
+  ctx.fillStyle = css("--panel"); ctx.beginPath(); ctx.arc(Sp[0],Sp[1],2.6,0,7); ctx.fill();
+  ctx.fillStyle = muteC; ctx.font="500 10.5px 'JetBrains Mono',monospace"; ctx.textAlign="left";
+  ctx.fillText(sc.platform, Sp[0]+11, Sp[1]-9);
+  ctx.textAlign="center"; ctx.fillText("target", T[0], T[1]+18);
+}
+function bind3d(){
+  const cv = $("view3d");
+  let last = null;
+  cv.addEventListener("pointerdown", e=>{ last=[e.clientX,e.clientY]; cv.setPointerCapture(e.pointerId); });
+  cv.addEventListener("pointermove", e=>{
+    if (!last) return;
+    cam.az -= (e.clientX-last[0])*0.008;
+    cam.el = Math.max(0.06, Math.min(1.45, cam.el + (e.clientY-last[1])*0.006));
+    last=[e.clientX,e.clientY]; draw3d();
+  });
+  cv.addEventListener("pointerup", e=>{ last=null; });
+  cv.addEventListener("pointercancel", ()=>{ last=null; });
+  $("reset3d").addEventListener("click", ()=>{ cam={az:-0.62, el:0.42}; draw3d(); });
+  $("spin").addEventListener("click", ()=>{
+    spinning = !spinning;
+    $("spin").setAttribute("aria-pressed", String(spinning));
+    if (spinning){
+      const step = () => { if(!spinning) return; cam.az += 0.004; draw3d(); spinRAF=requestAnimationFrame(step); };
+      step();
+    } else cancelAnimationFrame(spinRAF);
+  });
+}
+
+/* ---------------- layover / shadow cross-section ---------------- */
+function drawXsec(){
+  const cv = $("xsec"), ctx = cv.getContext("2d");
+  const DPR = Math.min(2, window.devicePixelRatio||1);
+  const W = cv.clientWidth||1120, H = 470;
+  if (cv.width !== W*DPR){ cv.width = W*DPR; cv.height = H*DPR; }
+  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.clearRect(0,0,W,H);
+
+  const inc = exp.inc, slope = exp.slope, graz = 90-inc;
+  const isLay = slope > inc, isSh = slope > graz, isFs = slope > 0 && !isLay;
+
+  const padL = 56, padR = 26, padT = 20;
+  const gw = W - padL - padR;
+  const groundY = 250, scaleX = gw/2000;         // 2 km of ground across the panel
+  const gx = m => padL + m*scaleX;
+  const gy = h => groundY - h*scaleX;            // no vertical exaggeration: angles must read true
+
+  // terrain: flat, then a hill whose front face sits at the chosen slope.
+  // Height is capped so a gentle slope still fits inside the 2 km panel.
+  const hillStart = 620;
+  const hillH = Math.min(250, 640*Math.tan(Math.max(slope,1)*D2R));
+  const run = hillH/Math.tan(Math.max(slope,1)*D2R);
+  const peak = hillStart + run;
+  const backRun = hillH/Math.tan(38*D2R);
+  const prof = [[0,0],[hillStart,0],[peak,hillH],[peak+backRun,0],[2000,0]];
+  const sample = [];
+  for (let m=0;m<=2000;m+=2){
+    let h=0;
+    for (let i=0;i<prof.length-1;i++){
+      const [x0,h0]=prof[i], [x1,h1]=prof[i+1];
+      if (m>=x0 && m<=x1){ h = h0 + (h1-h0)*((m-x0)/Math.max(x1-x0,1e-6)); break; }
+    }
+    sample.push([m,h]);
+  }
+
+  // The radar sits up and to the LEFT. The unit vector from the ground toward it
+  // is (-sin θ, +cos θ), so slant range increases to the right and DECREASES with
+  // height:  r = m sin θ − h cos θ.
+  // That minus sign is the whole of layover: on a slope steeper than θ the summit
+  // reaches a shorter range than the foot, and the slope images backwards.
+  const st = Math.sin(inc*D2R), ct = Math.cos(inc*D2R);
+  const r = (m,h) => m*st - h*ct;
+  const rs = sample.map(([m,h])=>r(m,h));
+  const rMin = Math.min.apply(null, rs), rMax = Math.max.apply(null, rs);
+
+  // Shadow by ray marching. The ray through (m,h) would cross x=0 at height
+  // h + m/tan θ; a point is hidden when an earlier point's ray passes above it.
+  const shade = new Array(sample.length).fill(false);
+  let horizon = -Infinity;
+  const cot = 1/Math.tan(Math.max(inc,0.5)*D2R);
+  for (let i=0;i<sample.length;i++){
+    const [m,h] = sample[i];
+    const t = h + m*cot;
+    if (t < horizon - 1e-9) shade[i] = true; else horizon = t;
+  }
+  // classify each sample: 0 normal, 1 front slope, 2 front slope in layover
+  const regime = sample.map(([m,h],i)=>{
+    if (i>=sample.length-1) return 0;
+    const dh = sample[i+1][1]-h, dm = sample[i+1][0]-m;
+    if (dh <= 1e-9) return 0;
+    return (Math.atan2(dh,dm)*R2D > inc) ? 2 : 1;
+  });
+
+  const inkC=css("--ink"), muteC=css("--muted"), ruleC=css("--rule"),
+        losC=css("--los"), layC=css("--layover"), shC=css("--shadow"), trkC=css("--track");
+
+  // incoming rays: the radar is up and to the left, so rays travel down-right
+  const rayDX = y => y*Math.tan(inc*D2R);
+  ctx.save(); ctx.globalAlpha=.42; ctx.strokeStyle=losC; ctx.lineWidth=1; ctx.setLineDash([4,5]);
+  for (let k=0;k<15;k++){
+    const topY = padT + 2, xTop = padL - 120 + k*(gw+40)/14;
+    const dx = rayDX(groundY - topY);
+    ctx.beginPath(); ctx.moveTo(xTop, topY); ctx.lineTo(xTop + dx, groundY); ctx.stroke();
+  }
+  ctx.restore();
+  // one bold ray with the angle marked
+  const ry = padT+2, rdx = rayDX(groundY-ry), rx = padL + 120 - rdx;
+  const tipX = rx + rdx;
+  ctx.strokeStyle=losC; ctx.lineWidth=2.2; ctx.setLineDash([]);
+  ctx.beginPath(); ctx.moveTo(rx,ry); ctx.lineTo(tipX, groundY); ctx.stroke();
+  // arrowhead pointing along travel, which is (sin θ, cos θ) in screen axes
+  const dxu = Math.sin(inc*D2R), dyu = Math.cos(inc*D2R);
+  ctx.fillStyle=losC; ctx.beginPath();
+  ctx.moveTo(tipX, groundY);
+  ctx.lineTo(tipX-dxu*14-dyu*5, groundY-dyu*14+dxu*5);
+  ctx.lineTo(tipX-dxu*14+dyu*5, groundY-dyu*14-dxu*5);
+  ctx.closePath(); ctx.fill();
+  // incidence arc, from the vertical round to the direction back to the sensor
+  ctx.strokeStyle=losC; ctx.lineWidth=1.3;
+  ctx.beginPath(); ctx.arc(tipX, groundY, 46, -Math.PI/2 - inc*D2R, -Math.PI/2); ctx.stroke();
+  ctx.setLineDash([2,3]); ctx.strokeStyle=muteC; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(tipX, groundY); ctx.lineTo(tipX, groundY-72); ctx.stroke();
+  ctx.setLineDash([]);
+  ctx.fillStyle=losC; ctx.font="700 12px 'JetBrains Mono',monospace"; ctx.textAlign="right";
+  ctx.fillText("θ "+fmt(inc,1)+"°", tipX-12, groundY-52);
+
+  // terrain fill
+  ctx.beginPath(); ctx.moveTo(gx(0), gy(0));
+  sample.forEach(([m,h])=>ctx.lineTo(gx(m), gy(h)));
+  ctx.lineTo(gx(2000), groundY+52); ctx.lineTo(gx(0), groundY+52); ctx.closePath();
+  ctx.fillStyle = css("--panel-2"); ctx.fill();
+  ctx.strokeStyle = ruleC; ctx.lineWidth = 1; ctx.stroke();
+
+  // colour the profile by regime
+  ctx.lineWidth = 4.5; ctx.lineCap="round";
+  for (let i=0;i<sample.length-1;i++){
+    const [m0,h0]=sample[i], [m1,h1]=sample[i+1];
+    const up = h1>h0+1e-9, down = h1<h0-1e-9;
+    let col = null;
+    if (shade[i]) col = shC;
+    else if (up && isLay) col = layC;
+    else if (up) col = losC;
+    if (!col) continue;
+    ctx.strokeStyle = col;
+    ctx.beginPath(); ctx.moveTo(gx(m0), gy(h0)); ctx.lineTo(gx(m1), gy(h1)); ctx.stroke();
+  }
+  ctx.lineCap="butt";
+
+  // slope arc at the foot of the hill
+  ctx.strokeStyle=inkC; ctx.globalAlpha=.55; ctx.lineWidth=1.2;
+  ctx.beginPath(); ctx.arc(gx(hillStart), gy(0), 40, -slope*D2R, 0); ctx.stroke();
+  ctx.globalAlpha=1;
+  ctx.fillStyle=inkC; ctx.font="600 11px 'JetBrains Mono',monospace"; ctx.textAlign="left";
+  ctx.fillText(fmt(slope,0)+"°", gx(hillStart)+46, gy(0)-8);
+
+  // ---- the slant-range image strip: where each ground point actually lands ----
+  // Brightness is the number of ground samples collapsing into one range bin,
+  // which is exactly what makes layover and foreshortening look bright in a real
+  // SAR image. A bin nothing reaches is shadow.
+  const stripY = 350, stripH = 44;
+  const bins = 440, acc = new Float32Array(bins), layHit = new Uint8Array(bins);
+  const rx0 = rMin, rspan = (rMax-rMin)||1;
+  sample.forEach(([m,h],i)=>{
+    if (shade[i]) return;
+    const b = Math.max(0, Math.min(bins-1, Math.round((r(m,h)-rx0)/rspan*(bins-1))));
+    acc[b] += 1;
+    if (regime[i] === 2) layHit[b] = 1;
+  });
+  // Flat ground sets the baseline density. Measure it rather than deriving it:
+  // most of the profile IS flat, so the median non-empty bin is the flat rate.
+  const nz = []; let amax = 0;
+  for (let b=0;b<bins;b++){ if (acc[b]>0) nz.push(acc[b]); amax = Math.max(amax, acc[b]); }
+  nz.sort((a,b)=>a-b);
+  const base = nz.length ? nz[nz.length>>1] : 1;
+  const sx0 = padL, sxw = gw;
+  for (let b=0;b<bins;b++){
+    const x = sx0 + b/bins*sxw, w = sxw/bins + 0.8;
+    if (acc[b] === 0){
+      ctx.fillStyle = shC; ctx.globalAlpha = .30;              // shadow: no echo
+    } else {
+      const t = Math.min(1, acc[b]/Math.max(amax, 1));
+      ctx.fillStyle = layHit[b] ? layC : (acc[b] > base*1.35 ? losC : muteC);
+      ctx.globalAlpha = 0.28 + 0.66*t;
+    }
+    ctx.fillRect(x, stripY, w, stripH);
+  }
+  ctx.globalAlpha=1;
+  ctx.strokeStyle=ruleC; ctx.lineWidth=1; ctx.strokeRect(sx0, stripY, sxw, stripH);
+
+  // tie-lines from ground to slant range for a few landmarks
+  const marks = [[hillStart,0,"foot"],[peak,hillH,"summit"],[peak+backRun,0,"back foot"]];
+  ctx.setLineDash([3,4]); ctx.lineWidth=1;
+  marks.forEach(([m,h,nm])=>{
+    const b = (r(m,h)-rx0)/rspan;
+    const x2 = sx0 + b*sxw;
+    ctx.strokeStyle = muteC; ctx.globalAlpha=.65;
+    ctx.beginPath(); ctx.moveTo(gx(m), gy(h)); ctx.lineTo(x2, stripY); ctx.stroke();
+    ctx.globalAlpha=1;
+    ctx.fillStyle=muteC; ctx.font="500 10px 'JetBrains Mono',monospace"; ctx.textAlign="center";
+    ctx.fillText(nm, x2, stripY+stripH+14);
+  });
+  ctx.setLineDash([]);
+
+  // axis labels
+  ctx.fillStyle=muteC; ctx.font="500 10.5px 'JetBrains Mono',monospace"; ctx.textAlign="left";
+  ctx.fillText("GROUND RANGE →", padL, groundY+46);
+  ctx.fillText("SLANT RANGE →  (what the radar records)", padL, stripY-9);
+  ctx.textAlign="left";
+  ctx.fillText("↖ radar this way", padL + gw*0.42, padT+12);
+
+  // caption
+  ctx.textAlign="left"; ctx.fillStyle=inkC; ctx.font="600 12px Archivo, sans-serif";
+  let msg;
+  if (isLay) msg = `Slope ${fmt(slope,0)}° exceeds incidence ${fmt(inc,0)}° — the summit reaches the radar before the foot does, so the slope folds over backwards.`;
+  else if (isFs) msg = `Slope ${fmt(slope,0)}° is under incidence ${fmt(inc,0)}° — the near slope is squeezed into fewer range bins, but the order still holds.`;
+  else msg = `Flat ground: ground range and slant range differ only by a constant factor.`;
+  ctx.fillText(msg, padL, H-28);
+  ctx.fillStyle=muteC; ctx.font="400 11.5px Newsreader, Georgia, serif";
+  ctx.fillText(isSh
+    ? `The back slope falls away faster than the grazing angle ${fmt(graz,0)}°, so it is in shadow — no echo at all.`
+    : `The back slope is gentler than the grazing angle ${fmt(graz,0)}°, so it is still lit.`, padL, H-10);
+
+  $("stFs").classList.toggle("on", isFs);
+  $("stLay").classList.toggle("on", isLay);
+  $("stSh").classList.toggle("on", isSh);
+  $("expNote").textContent = `θ ${fmt(inc,1)}°  ·  grazing ${fmt(graz,1)}°  ·  squint ${signed(exp.sq,1)}°`;
+}
+
+/* ---------------- wiring ---------------- */
+function load(i){
+  idx = ((i % SCENES.length) + SCENES.length) % SCENES.length;
+  drawn = null; checked = false;
+  $("check").disabled = true; $("clear").disabled = true;
+  $("verdict").innerHTML = "";
+  const sc = SCENES[idx];
+  $("stageTitle").textContent = sc.target;
+  $("prompt").textContent = sc.prompt;
+  $("hint").textContent = sc.note;
+  $("qcount").textContent = `${idx+1} / ${SCENES.length}`;
+  $("strip").querySelectorAll(".chip").forEach(b=>b.setAttribute("aria-selected", String(+b.dataset.i===idx)));
+  buildLayers(); paint(); fillGeom(); draw3d();
+}
+function bind(){
+  $("check").addEventListener("click", ()=>{
+    if (!drawn) return;
+    checked = true; $("check").disabled = true; grade(); redraw();
+  });
+  $("clear").addEventListener("click", ()=>{
+    drawn = null; checked = false; $("check").disabled = true; $("clear").disabled = true;
+    $("verdict").innerHTML = ""; redraw();
+  });
+  $("next").addEventListener("click", ()=>load(idx+1));
+  $("blend").addEventListener("input", ()=>{
+    $("imgOver").style.opacity = String(1 - (+$("blend").value)/100);
+  });
+  const sync = () => {
+    exp.inc = +$("sInc").value; exp.sq = +$("sSq").value; exp.slope = +$("sSl").value;
+    $("vInc").textContent = fmt(exp.inc,1)+"°";
+    $("vSq").textContent = signed(exp.sq,1)+"°";
+    $("vSl").textContent = fmt(exp.slope,1)+"°";
+    drawXsec();
+  };
+  ["sInc","sSq","sSl"].forEach(k=>$(k).addEventListener("input", sync));
+  $("useScene").addEventListener("click", ()=>{
+    const g = SCENES[idx].geom;
+    $("sInc").value = g.incidence; $("sSq").value = g.squint_exploitation;
+    $("sSl").value = Math.min(75, Math.max(5, Math.round(g.incidence*0.8)));
+    sync();
+  });
+  $("themeBtn").addEventListener("click", ()=>{
+    const cur = document.documentElement.getAttribute("data-theme");
+    const dark = cur ? cur==="dark"
+      : window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute("data-theme", dark ? "light" : "dark");
+    try{ localStorage.setItem("lookangle-theme", dark?"light":"dark"); }catch(e){}
+    draw3d(); drawXsec(); redraw();
+  });
+  window.addEventListener("resize", ()=>{ draw3d(); drawXsec(); });
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>{ draw3d(); drawXsec(); });
+  $("sInc").value = 35; $("sSq").value = 0; $("sSl").value = 30; sync();
+}
+function provenance(){
+  const n = SCENES.length;
+  $("prov").innerHTML = `Every angle on this page is read from the scene's own
+    <code>*.stac.v2.json</code> sidecar in the Umbra archive on rsde-02. The heading is derived as
+    <code>view:azimuth &minus; 180 &minus; umbra:squint_angle_engineering_degrees</code>, a form
+    checked three ways: against <code>sat:orbit_state</code> on all 1,142 scenes that carry it
+    (100% agreement), against the rotation baked into each GEC raster's geotransform
+    (median 0.09&deg;), and against the true ARP velocity vector in the SICD state vectors
+    (0.14&ndash;0.30&deg;). ${n} scenes shown. Optical imagery &copy; Esri World Imagery.`;
+}
+try{
+  const t = localStorage.getItem("lookangle-theme");
+  if (t) document.documentElement.setAttribute("data-theme", t);
+}catch(e){}
+buildStrip(); bindDraw(); bind3d(); bind(); provenance(); load(0);
+</script>

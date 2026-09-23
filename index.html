@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SAR Geometry — Learning</title>
+<meta name="description" content="Interactive exercises on synthetic aperture radar acquisition geometry and geometric distortion, built on real Umbra X-band scenes. CIVE 6359, University of Houston.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+<style>
+:root{
+  --ground:#E9EDF2; --panel:#FFF; --panel-2:#F3F6F9;
+  --ink:#131A22; --muted:#5B6875; --faint:#8A95A1;
+  --rule:#CFD7E0; --rule-soft:#E2E8EF;
+  --los:#A9500F; --track:#0D6379; --layover:#B93C18; --shadow:#3B4263;
+  --shadow-1:0 1px 2px rgba(16,24,34,.06), 0 4px 14px rgba(16,24,34,.05);
+  --r:10px;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --ground:#0D1218; --panel:#151C25; --panel-2:#1B242F;
+  --ink:#E4EAF1; --muted:#93A0AE; --faint:#6C7A88;
+  --rule:#28323E; --rule-soft:#1F2833;
+  --los:#F0A143; --track:#4BC6DD; --layover:#F07A4B; --shadow:#9AA0C9;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+}}
+:root[data-theme="dark"]{
+  --ground:#0D1218; --panel:#151C25; --panel-2:#1B242F;
+  --ink:#E4EAF1; --muted:#93A0AE; --faint:#6C7A88;
+  --rule:#28323E; --rule-soft:#1F2833;
+  --los:#F0A143; --track:#4BC6DD; --layover:#F07A4B; --shadow:#9AA0C9;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font:14px/1.55 Archivo,"Helvetica Neue",Arial,sans-serif;-webkit-font-smoothing:antialiased}
+.wrap{max-width:1080px;margin:0 auto;padding:30px 20px 70px}
+.eyebrow{font-family:"JetBrains Mono",monospace;font-size:10.5px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--faint);margin:0 0 8px}
+h1{font-size:clamp(28px,4vw,42px);font-weight:700;letter-spacing:-.025em;margin:0;text-wrap:balance}
+.lede{font-family:Newsreader,Georgia,serif;font-size:17px;color:var(--muted);
+  margin:10px 0 0;max-width:66ch}
+header{padding-bottom:22px;border-bottom:1px solid var(--rule);display:flex;
+  justify-content:space-between;align-items:flex-end;gap:20px;flex-wrap:wrap}
+.themebtn{font:500 12px/1 Archivo,sans-serif;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:8px;padding:8px 12px;cursor:pointer}
+.themebtn:hover{color:var(--ink);border-color:var(--faint)}
+a{color:var(--track)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(330px,1fr));gap:18px;margin:26px 0 0}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);
+  box-shadow:var(--shadow-1);display:flex;flex-direction:column;overflow:hidden}
+.card .num{font-family:"JetBrains Mono",monospace;font-size:11px;letter-spacing:.14em;
+  color:var(--los);padding:14px 16px 0}
+.card h2{font-size:21px;margin:4px 16px 0;letter-spacing:-.015em}
+.card .sub{font-family:Newsreader,Georgia,serif;font-size:14.5px;color:var(--muted);
+  margin:8px 16px 0;flex:1}
+.card ul{margin:12px 16px 0;padding-left:17px;font-size:13.5px;color:var(--ink)}
+.card li{margin-bottom:5px}
+.card .meta{font-family:"JetBrains Mono",monospace;font-size:10.5px;color:var(--faint);
+  margin:14px 16px 0;border-top:1px solid var(--rule-soft);padding-top:10px}
+.card .go{margin:14px 16px 16px}
+.btn{display:inline-block;font:600 13px/1 Archivo,sans-serif;padding:11px 18px;border-radius:8px;
+  background:var(--track);color:#fff;text-decoration:none;border:1px solid var(--track)}
+.btn:hover{filter:brightness(1.08)}
+section.note{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--los);
+  border-radius:var(--r);padding:16px 18px;margin:26px 0 0;box-shadow:var(--shadow-1)}
+section.note h3{margin:0 0 7px;font-size:14px}
+section.note p{margin:0 0 9px;font-family:Newsreader,Georgia,serif;font-size:14.5px;max-width:74ch}
+section.note p:last-child{margin-bottom:0}
+code{font-family:"JetBrains Mono",monospace;font-size:12.5px;color:var(--los)}
+footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--rule);
+  font-family:Newsreader,Georgia,serif;font-size:13px;color:var(--muted);max-width:78ch}
+footer a{color:var(--track)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div>
+    <p class="eyebrow">CIVE 6359 · SAR Remote Sensing · University of Houston</p>
+    <h1>SAR Geometry</h1>
+    <p class="lede">Two interactive exercises built on real Umbra X-band scenes and
+      Copernicus 30 m topography. Nothing here is a cartoon: every angle is read from the
+      acquisition's own metadata, and every distortion is computed from the terrain that
+      was actually under the satellite.</p>
+  </div>
+  <button class="themebtn" id="themeBtn" type="button">Theme</button>
+</header>
+
+<div class="cards">
+  <article class="card">
+    <p class="num">EXERCISE 01</p>
+    <h2>Look Angle</h2>
+    <p class="sub">Eleven scenes. You are shown an amplitude image and asked one question —
+      where was the satellite flying, where was it looking, which way does relief lean?
+      You answer by drawing on the image, and you are marked against that scene's own
+      sidecar.</p>
+    <ul>
+      <li>Locate the ground track and the line of sight from metadata alone</li>
+      <li>Tell a squinted acquisition from a broadside one, and say why it matters</li>
+      <li>Read the three squint conventions without mixing them up</li>
+    </ul>
+    <p class="meta">11 scenes · 8 targets · incidence 15–70° · squint −44° to +44°<br>
+      both orbit directions, both look sides · ~20 min</p>
+    <p class="go"><a class="btn" href="look-angle/">Start exercise 1 &rarr;</a></p>
+  </article>
+
+  <article class="card">
+    <p class="num">EXERCISE 02</p>
+    <h2>Where the Summit Lands</h2>
+    <p class="sub">Twenty acquisitions over four targets, each with seven pixel-registered
+      layers. A SAR image is a map of <em>range</em>, and the geocoding converts range to
+      position by assuming the whole scene sits at one height. Click any point on the
+      topography and see where the product actually puts it.</p>
+    <ul>
+      <li>Explain why a GEC product is not a map, and predict the error</li>
+      <li>Derive and apply the layover and shadow thresholds</li>
+      <li>Compare one volcano across five look angles and account for the differences</li>
+    </ul>
+    <p class="meta">20 acquisitions · Fuego, Nevado del Ruiz, Gamalama, Quimbaya<br>
+      SAR · optical · DEM · hillshade · simulation · masks · displacement · ~35 min</p>
+    <p class="go"><a class="btn" href="where-the-summit-lands/">Start exercise 2 &rarr;</a></p>
+  </article>
+</div>
+
+<section class="note">
+  <h3>The one equation both exercises are built around</h3>
+  <p>A radar measures time, which gives <b>slant range</b>. For a point at ground range
+    <code>g</code> and height <code>h</code>, seen at incidence <code>θ</code>:
+    <code>r = g·sinθ − h·cosθ</code>. Height shortens the range. To turn range back into
+    a map position the processor must assume a height, and it assumes one constant value
+    <code>h_ref</code> for the whole scene. Subtract the two and the error falls out:</p>
+  <p style="font-family:'JetBrains Mono',monospace;font-size:14px;color:var(--los)">
+    displacement = −(h − h_ref) · cot θ</p>
+  <p>Everything else — layover, shadow, foreshortening, why terrain correction exists —
+    follows from that line. At Fuego's 17.5° acquisition it reaches <b>8.2 km</b>.</p>
+</section>
+
+<section class="note" style="border-left-color:var(--track)">
+  <h3>Using these</h3>
+  <p>They run in any modern browser with no login, no install and no VPN. Both work on a
+    laptop; the second is easier with a reasonably large window. Nothing you draw or click
+    is recorded or sent anywhere — there is no server behind these pages.</p>
+  <p>Instructors: the source, the data-preparation pipeline and the verification tests are
+    in the <a href="https://github.com/PietroMilillo/sar-geometry-learning">GitHub
+    repository</a>. <a href="about/metadata-hooks.md">Metadata hooks</a> lists every field
+    used and the traps found along the way.</p>
+</section>
+
+<footer>
+  <p>Amplitude imagery: Umbra X-band spotlight, geocoded ellipsoid corrected.
+    Topography: Copernicus GLO-30 (COP30) — &copy; DLR e.V. 2010–2014 and &copy; Airbus
+    Defence and Space GmbH 2014–2018, provided under the Copernicus DEM licence.
+    Optical basemap: Esri World Imagery.</p>
+  <p>Built for CIVE 6359 by <a href="https://milillo.cive.uh.edu">Pietro Milillo</a>,
+    Department of Civil and Environmental Engineering, University of Houston.
+    Course material released under
+    <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; code under the
+    MIT licence. Imagery remains subject to its providers' terms.</p>
+</footer>
+</div>
+<script>
+(function(){
+  try{var t=localStorage.getItem("sargeo-theme"); if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
+  document.getElementById("themeBtn").addEventListener("click",function(){
+    var c=document.documentElement.getAttribute("data-theme");
+    var dark=c?c==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute("data-theme",dark?"light":"dark");
+    try{localStorage.setItem("sargeo-theme",dark?"light":"dark");}catch(e){}
+  });
+})();
+</script>
+</body>
+</html>

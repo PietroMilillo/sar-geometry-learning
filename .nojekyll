@@ -1,0 +1,2 @@
+# GitHub Pages: serve every path as-is, no Jekyll processing.
+# Without this, directories and files beginning with _ are dropped.

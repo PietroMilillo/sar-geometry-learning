@@ -1,0 +1,597 @@
+<title>Where the Summit Lands</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#E9EDF2;  --panel:#FFFFFF;   --panel-2:#F3F6F9;
+  --ink:#131A22;     --muted:#5B6875;   --faint:#8A95A1;
+  --rule:#CFD7E0;    --rule-soft:#E2E8EF;
+  --los:#A9500F;     --track:#0D6379;
+  --layover:#B93C18; --shadow:#3B4263;
+  --good:#1D6F4A;    --warn:#8A6410;    --bad:#A32F20;
+  --stage:#20262E;
+  --shadow-1:0 1px 2px rgba(16,24,34,.06), 0 4px 14px rgba(16,24,34,.05);
+  --r:9px;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0D1218;  --panel:#151C25;  --panel-2:#1B242F;
+    --ink:#E4EAF1;     --muted:#93A0AE;  --faint:#6C7A88;
+    --rule:#28323E;    --rule-soft:#1F2833;
+    --los:#F0A143;     --track:#4BC6DD;
+    --layover:#F07A4B; --shadow:#9AA0C9;
+    --good:#5CC494;    --warn:#E0B355;   --bad:#F0806E;
+    --stage:#0A0E13;
+    --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0D1218;  --panel:#151C25;  --panel-2:#1B242F;
+  --ink:#E4EAF1;     --muted:#93A0AE;  --faint:#6C7A88;
+  --rule:#28323E;    --rule-soft:#1F2833;
+  --los:#F0A143;     --track:#4BC6DD;
+  --layover:#F07A4B; --shadow:#9AA0C9;
+  --good:#5CC494;    --warn:#E0B355;   --bad:#F0806E;
+  --stage:#0A0E13;
+  --shadow-1:0 1px 2px rgba(0,0,0,.4), 0 6px 20px rgba(0,0,0,.3);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--ground);color:var(--ink);
+  font-family:Archivo,"Helvetica Neue",Arial,sans-serif;font-size:14px;line-height:1.5;
+  -webkit-font-smoothing:antialiased}
+.wrap{max-width:1460px;margin:0 auto;padding:22px 20px 60px}
+header.top{display:flex;align-items:flex-end;justify-content:space-between;gap:20px;
+  flex-wrap:wrap;padding-bottom:16px;border-bottom:1px solid var(--rule)}
+.brand h1{font-size:clamp(26px,3.4vw,38px);font-weight:700;letter-spacing:-.024em;margin:0;text-wrap:balance}
+.brand .sub{font-family:Newsreader,Georgia,serif;font-size:16px;color:var(--muted);
+  margin:5px 0 0;max-width:68ch}
+.eyebrow{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:10.5px;
+  letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin:0 0 6px}
+.themebtn{font:500 12px/1 Archivo,sans-serif;color:var(--muted);background:var(--panel);
+  border:1px solid var(--rule);border-radius:var(--r);padding:8px 12px;cursor:pointer}
+.themebtn:hover{color:var(--ink);border-color:var(--faint)}
+button:focus-visible,input:focus-visible{outline:2px solid var(--track);outline-offset:2px}
+
+.thesis{background:var(--panel);border:1px solid var(--rule);border-left:3px solid var(--los);
+  border-radius:var(--r);padding:14px 16px;margin:16px 0 0;box-shadow:var(--shadow-1)}
+.thesis p{margin:0;font-family:Newsreader,Georgia,serif;font-size:15.5px;max-width:82ch}
+.thesis code{font-family:"JetBrains Mono",monospace;font-size:13px;color:var(--los)}
+.thesis .ev{margin-top:8px;font-family:"JetBrains Mono",monospace;font-size:11px;color:var(--muted)}
+
+.tabs{display:flex;gap:6px;margin:18px 0 10px;flex-wrap:wrap}
+.tabs button{font:600 13px/1 Archivo,sans-serif;padding:9px 15px;border-radius:7px;
+  border:1px solid var(--rule);background:var(--panel);color:var(--muted);cursor:pointer}
+.tabs button[aria-selected="true"]{border-color:var(--track);color:var(--ink);
+  box-shadow:inset 0 0 0 1px var(--track)}
+.strip{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 12px}
+.chip{flex:0 0 auto;background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);
+  padding:8px 12px;cursor:pointer;font:inherit;color:var(--ink);text-align:left;min-width:158px}
+.chip[aria-selected="true"]{border-color:var(--track);box-shadow:inset 0 0 0 1px var(--track)}
+.chip .t1{font-weight:600;font-size:12.5px;font-family:"JetBrains Mono",monospace}
+.chip .t2{font-family:"JetBrains Mono",monospace;font-size:10px;color:var(--muted);
+  font-variant-numeric:tabular-nums;display:block;margin-top:2px}
+.chip .bars{display:flex;gap:2px;margin-top:5px;height:5px}
+.chip .bars i{display:block;height:5px;border-radius:2px}
+.chip.borrowed{border-style:dashed;border-color:var(--faint);background:var(--panel-2)}
+.chip.borrowed[aria-selected="true"]{border-color:var(--track)}
+.chip .btag{display:block;font-family:"JetBrains Mono",monospace;font-size:9px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--los);margin-bottom:3px}
+.borrowbar{margin:0 0 12px;padding:9px 12px;border:1px dashed var(--faint);
+  border-radius:7px;background:var(--panel-2);font-family:Newsreader,Georgia,serif;
+  font-size:13.5px;color:var(--ink)}
+.borrowbar b{color:var(--los)}
+
+.main{display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:18px}
+@media (max-width:1060px){.main{grid-template-columns:1fr}}
+.card{background:var(--panel);border:1px solid var(--rule);border-radius:var(--r);box-shadow:var(--shadow-1)}
+.card>.hd{display:flex;align-items:center;justify-content:space-between;gap:10px;
+  padding:11px 14px;border-bottom:1px solid var(--rule-soft);flex-wrap:wrap}
+.card>.hd h2{font-size:12px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);margin:0}
+.segs{display:flex;gap:2px;background:var(--panel-2);border-radius:7px;padding:2px;flex-wrap:wrap}
+.segs button{font:500 11.5px/1 Archivo,sans-serif;color:var(--muted);background:none;border:0;
+  border-radius:5px;padding:6px 9px;cursor:pointer;white-space:nowrap}
+.segs button[aria-pressed="true"]{background:var(--panel);color:var(--ink);box-shadow:var(--shadow-1)}
+
+.stage{position:relative;background:var(--stage);border-radius:0 0 var(--r) var(--r);overflow:hidden}
+.frame{position:relative;width:100%;aspect-ratio:1/1}
+.frame img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;user-select:none;-webkit-user-drag:none}
+.frame img.base{z-index:1}
+.frame img.ov{z-index:2;pointer-events:none}
+.frame svg.probe{position:absolute;inset:0;width:100%;height:100%;z-index:3;cursor:crosshair}
+.badge{position:absolute;left:10px;top:10px;z-index:4;font-family:"JetBrains Mono",monospace;
+  font-size:10px;background:rgba(10,14,19,.74);color:#E8EEF5;padding:4px 8px;border-radius:5px;
+  pointer-events:none}
+.ovctl{position:absolute;right:10px;top:10px;z-index:4;display:flex;align-items:center;gap:8px;
+  background:rgba(10,14,19,.74);padding:5px 10px;border-radius:5px}
+.ovctl label{font-family:"JetBrains Mono",monospace;font-size:9.5px;color:#C3CDD8}
+.ovctl input{width:86px;accent-color:#F0A143}
+
+.body{padding:14px}
+.kv{width:100%;border-collapse:collapse;font-family:"JetBrains Mono",monospace;font-size:11.5px}
+.kv td{padding:5px 0;border-bottom:1px solid var(--rule-soft);vertical-align:baseline}
+.kv td:first-child{color:var(--muted);padding-right:12px}
+.kv td:last-child{text-align:right;font-variant-numeric:tabular-nums;font-weight:500}
+.kv tr:last-child td{border-bottom:0}
+.sw{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:6px}
+
+.probebox{padding:13px 14px;border-top:1px solid var(--rule-soft);background:var(--panel-2);
+  border-radius:0 0 var(--r) var(--r)}
+.probebox h3{margin:0 0 5px;font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.probebox p{margin:0;font-family:Newsreader,Georgia,serif;font-size:14.5px;line-height:1.5}
+.probebox .big{font-family:"JetBrains Mono",monospace;font-weight:700;font-size:15px;color:var(--los)}
+.probebox .hint{font-style:italic;color:var(--muted);font-size:13px}
+
+.resp{padding:12px 14px}
+.resp canvas{width:100%;display:block}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-family:"JetBrains Mono",monospace;
+  font-size:10px;color:var(--muted)}
+.legend span{display:flex;align-items:center;gap:5px}
+
+.explain{margin-top:18px}
+.explain .body{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px}
+.explain h3{margin:0 0 6px;font-size:13.5px;font-weight:700}
+.explain p{margin:0 0 9px;font-family:Newsreader,Georgia,serif;font-size:14px;line-height:1.58;color:var(--ink)}
+.explain code{font-family:"JetBrains Mono",monospace;font-size:12px;color:var(--los)}
+.explain .fx{font-family:"JetBrains Mono",monospace;font-size:12.5px;background:var(--panel-2);
+  border:1px solid var(--rule-soft);border-radius:6px;padding:9px 11px;margin:9px 0;overflow-x:auto}
+footer.note{margin-top:26px;padding-top:16px;border-top:1px solid var(--rule);
+  font-family:Newsreader,Georgia,serif;font-size:13px;color:var(--muted);max-width:80ch}
+footer.note code{font-family:"JetBrains Mono",monospace;font-size:11.5px;color:var(--ink)}
+@media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+<header class="top">
+  <div class="brand">
+    <p class="eyebrow">Umbra X-band &middot; COP30 topography &middot; slant-range simulation</p>
+    <h1>Where the Summit Lands</h1>
+    <p class="sub">A SAR image is not a map of the ground. It is a map of <em>range</em>,
+      and a GEC product converts range to position by pretending the whole scene sits at one
+      height. Everything that is not at that height lands somewhere it isn't.</p>
+  </div>
+  <button class="themebtn" id="themeBtn" type="button">Theme</button>
+</header>
+
+<div class="thesis">
+  <p><b>The product is geocoded onto an ellipsoid, not onto the terrain.</b>
+     Umbra's <code>sar:product_type = GEC</code> means <i>Geocoded Ellipsoid Corrected</i>:
+     every pixel is placed as though the ground were a single constant-height surface above
+     the ellipsoid. You can see the assumption in the metadata &mdash; each scene's footprint
+     polygon carries <b>one elevation for all four corners</b>, and that is the height the
+     geocoding assumed.</p>
+  <p class="ev" id="thesisEv"></p>
+</div>
+
+<div class="tabs" id="tabs" role="tablist" aria-label="Targets"></div>
+<div class="strip" id="strip" role="tablist" aria-label="Acquisitions"></div>
+
+<div class="main">
+  <section class="card" aria-label="Layers">
+    <div class="hd">
+      <h2 id="stageTitle">Scene</h2>
+      <div class="segs" id="layers" role="group" aria-label="Base layer"></div>
+    </div>
+    <div class="stage">
+      <div class="frame" id="frame">
+        <img class="base" id="imgBase" alt="">
+        <img class="ov" id="imgOv" alt="">
+        <svg class="probe" id="probe" viewBox="0 0 1000 1000" preserveAspectRatio="none"
+             aria-label="Click the topography to see where the radar puts that point"></svg>
+        <div class="badge" id="badge"></div>
+        <div class="ovctl">
+          <label for="ovsel" class="sr">Overlay</label>
+          <select id="ovsel" style="font:500 10px 'JetBrains Mono',monospace;background:#161d26;
+                  color:#E8EEF5;border:1px solid #333d4a;border-radius:4px;padding:3px 5px">
+            <option value="none">no overlay</option>
+            <option value="mask">layover / shadow</option>
+            <option value="disp">displacement</option>
+          </select>
+          <input type="range" id="ovop" min="0" max="100" value="70">
+        </div>
+      </div>
+    </div>
+    <div id="borrowNote" style="padding:0 14px" hidden></div>
+    <div class="probebox" id="probebox">
+      <h3>Where does this point land?</h3>
+      <p class="hint" id="probeText">Click anywhere on the image. The tool reads the COP30
+        height there and works out where that point appears in this GEC product.</p>
+    </div>
+  </section>
+
+  <div style="display:flex;flex-direction:column;gap:18px;min-width:0">
+    <section class="card" aria-label="Reference plane">
+      <div class="hd"><h2>This acquisition</h2><span id="whyTag" style="font:400 11px Newsreader,serif;color:var(--muted)"></span></div>
+      <div class="body"><table class="kv" id="geomTable"></table></div>
+    </section>
+
+    <section class="card" aria-label="Geometry response">
+      <div class="hd"><h2>Same ground, different geometry</h2></div>
+      <div class="resp">
+        <canvas id="resp" width="760" height="300"></canvas>
+        <div class="legend">
+          <span><i class="sw" style="background:var(--layover)"></i>layover % of scene</span>
+          <span><i class="sw" style="background:var(--shadow)"></i>shadow % of scene</span>
+          <span><i class="sw" style="background:var(--los)"></i>peak displacement</span>
+        </div>
+        <p id="coverage" style="margin:10px 0 0;font-family:Newsreader,Georgia,serif;
+           font-size:13.5px;line-height:1.5;color:var(--muted)"></p>
+      </div>
+    </section>
+  </div>
+</div>
+
+<section class="card explain">
+  <div class="hd"><h2>Why this happens</h2></div>
+  <div class="body">
+    <div>
+      <h3>Range, not position</h3>
+      <p>A radar measures the time for an echo to return, which gives <b>slant range</b>.
+         For a point at ground-range <code>g</code> and height <code>h</code>, seen at
+         incidence <code>&theta;</code>:</p>
+      <div class="fx">r = g&middot;sin&theta; &minus; h&middot;cos&theta;</div>
+      <p>Height <i>shortens</i> the range. Two points at the same range are indistinguishable
+         to the radar, however far apart they are on the ground.</p>
+    </div>
+    <div>
+      <h3>What the geocoder assumes</h3>
+      <p>To turn range back into a map position, the GEC processor must assume a height.
+         It assumes one constant value, <code>h_ref</code>, for the whole scene, and solves</p>
+      <div class="fx">r = g&prime;&middot;sin&theta; &minus; h_ref&middot;cos&theta;</div>
+      <p>Subtract the two and the error falls out. This single line is the whole exercise:</p>
+      <div class="fx" style="border-color:var(--los);color:var(--los)">g&prime; &minus; g = &minus;(h &minus; h_ref) &middot; cot&theta;</div>
+      <p>Ground above the reference plane is pushed <b>toward</b> the sensor; ground below is
+         pushed away. Nothing about the radar is wrong &mdash; the range is exact. The map
+         position is wrong because the height was guessed.</p>
+    </div>
+    <div>
+      <h3>Layover and shadow</h3>
+      <p>Push the same idea further. If a slope facing the radar is steeper than the incidence
+         angle, the top of it reaches a <i>shorter</i> range than the bottom, so it images
+         before the bottom does &mdash; the slope appears inside out. That is <b>layover</b>:</p>
+      <div class="fx">layover when slope &gt; &theta;</div>
+      <p>On the far side, ground that falls away faster than the grazing angle never gets
+         illuminated at all &mdash; <b>shadow</b>:</p>
+      <div class="fx">shadow when back-slope &gt; 90&deg; &minus; &theta;</div>
+      <p>Both thresholds depend only on the acquisition, which is why the same mountain
+         changes character completely between the passes in the strip above.</p>
+    </div>
+    <div>
+      <h3>How to read the layers</h3>
+      <p><b>SAR</b> is the real amplitude, already geocoded the flawed way.
+         <b>Simulated</b> is what the geometry predicts from COP30 alone &mdash; no radar
+         involved, just the terrain pushed through this acquisition's look vector.
+         <b>Hillshade</b> is the topography lit from exactly the direction and elevation the
+         radar illuminated it, which is the fairest optical-style comparison.</p>
+      <p>Flip between SAR and Simulated on a steep scene and the bright folds and dark
+         shadows should fall in the same places. Where they don't, you are looking at
+         something the terrain model doesn't know about &mdash; vegetation, buildings, or
+         change since COP30 was made.</p>
+      <p class="hint" style="font-family:Newsreader,serif;font-style:italic;color:var(--muted)">
+         The simulation uses 30 m COP30, so it cannot resolve anything finer than about
+         60 m. It is a geometry model, not a backscatter model.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="note" id="prov"></footer>
+</div>
+
+<script id="scene-data" type="application/json">[{"id":"Fuego_20260309172449","stem":"2026-03-09-17-24-35_UMBRA-10","group":"Fuego","target":"Fuego","why":"shallowest incidence here - the largest terrain displacement","datetime":"2026-03-09T17:24:49.900000Z","platform":"Umbra-10","images":{"sar":"Fuego_20260309172449_sar.webp","dem":"Fuego_20260309172449_dem.webp","hill":"Fuego_20260309172449_hill.webp","sim":"Fuego_20260309172449_sim.webp","mask":"Fuego_20260309172449_mask.webp","disp":"Fuego_20260309172449_disp.webp","opt":"Fuego_20260309172449_opt.webp"},"geom":{"incidence":17.496953769106895,"grazing":72.5030462308931,"view_azimuth":306.49837082852355,"look_dir":126.49837082852355,"heading":191.61276036532468,"squint_off_broadside":24.88561046319886,"squint_exploitation":24.88561046319886,"squint_engineering":-65.11438953680114,"look_side":"left","orbit_state":"descending","h_ref":3781.769595254414},"terrain":{"relief_m":2756.6925048828125,"dem_min":1211.1947021484375,"dem_max":3967.88720703125,"cot":3.172182873435116,"disp_max_m":8154.3336507930835,"disp_max_px":839.85324427112,"disp_p99_m":7688.0457582049075,"layover_pct":21.94395061728395,"shadow_pct":0.0,"dem_source":"cop30_40d5fa90bb6a.tif"},"grid":{"size":900,"mpp":9.70923635339404,"span_m":8738.312718054636,"lat":14.474491220986835,"lon":-90.88070052576327,"crs":"+proj=tmerc +lat_0=14.47449122 +lon_0=-90.88070053 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Fuego_20260309172449_demdata.png","size":256,"min":1214.7200927734375,"max":3965.44287109375,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Fuego_20260415164827","stem":"2026-04-15-16-48-25_UMBRA-10","group":"Fuego","target":"Fuego","why":"steepest incidence here - displacement at its smallest","datetime":"2026-04-15T16:48:27.200000Z","platform":"Umbra-10","images":{"sar":"Fuego_20260415164827_sar.webp","dem":"Fuego_20260415164827_dem.webp","hill":"Fuego_20260415164827_hill.webp","sim":"Fuego_20260415164827_sim.webp","mask":"Fuego_20260415164827_mask.webp","disp":"Fuego_20260415164827_disp.webp","opt":"Fuego_20260415164827_opt.webp"},"geom":{"incidence":67.318869960445,"grazing":22.681130039555008,"view_azimuth":83.92673278943295,"look_dir":263.92673278943295,"heading":189.304645521071,"squint_off_broadside":15.377912731638048,"squint_exploitation":-15.377912731638048,"squint_engineering":74.62208726836195,"look_side":"right","orbit_state":"descending","h_ref":3435.8775667411714},"terrain":{"relief_m":2549.42626953125,"dem_min":1416.83837890625,"dem_max":3966.2646484375,"cot":0.41792214252956716,"disp_max_m":843.8011832311275,"disp_max_px":110.47579616465416,"disp_p99_m":796.7793258576022,"layover_pct":0.11012345679012345,"shadow_pct":37.90024691358025,"dem_source":"cop30_40d5fa90bb6a.tif"},"grid":{"size":900,"mpp":7.637882798993531,"span_m":6874.094519094178,"lat":14.469995791672051,"lon":-90.88000486607453,"crs":"+proj=tmerc +lat_0=14.46999579 +lon_0=-90.88000487 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Fuego_20260415164827_demdata.png","size":256,"min":1419.7318115234375,"max":3965.4111328125,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Fuego_20260305045611","stem":"2026-03-05-04-55-56_UMBRA-10","group":"Fuego","target":"Fuego","why":"look direction furthest from the other passes over this target","datetime":"2026-03-05T04:56:11.600000Z","platform":"Umbra-10","images":{"sar":"Fuego_20260305045611_sar.webp","dem":"Fuego_20260305045611_dem.webp","hill":"Fuego_20260305045611_hill.webp","sim":"Fuego_20260305045611_sim.webp","mask":"Fuego_20260305045611_mask.webp","disp":"Fuego_20260305045611_disp.webp","opt":"Fuego_20260305045611_opt.webp"},"geom":{"incidence":22.924293346255496,"grazing":67.0757066537445,"view_azimuth":100.0097129365188,"look_dir":280.0097129365188,"heading":348.2225557325502,"squint_off_broadside":21.787157203968633,"squint_exploitation":21.787157203968633,"squint_engineering":-68.21284279603137,"look_side":"left","orbit_state":"ascending","h_ref":3781.7714925988325},"terrain":{"relief_m":2562.925537109375,"dem_min":1404.956298828125,"dem_max":3967.8818359375,"cot":2.364534163378458,"disp_max_m":5620.060725707827,"disp_max_px":698.7982295976122,"disp_p99_m":5288.116890286563,"layover_pct":25.553086419753086,"shadow_pct":0.0,"dem_source":"cop30_40d5fa90bb6a.tif"},"grid":{"size":900,"mpp":8.042465604047132,"span_m":7238.219043642419,"lat":14.474489093715658,"lon":-90.88070271336983,"crs":"+proj=tmerc +lat_0=14.47448909 +lon_0=-90.88070271 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Fuego_20260305045611_demdata.png","size":256,"min":1409.7435302734375,"max":3965.6552734375,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Fuego_20241115042838","stem":"2024-11-15-04-28-26_UMBRA-08","group":"Fuego","target":"Fuego","why":"most heavily squinted pass available here","datetime":"2024-11-15T04:28:38.700000Z","platform":"Umbra-08","images":{"sar":"Fuego_20241115042838_sar.webp","dem":"Fuego_20241115042838_dem.webp","hill":"Fuego_20241115042838_hill.webp","sim":"Fuego_20241115042838_sim.webp","mask":"Fuego_20241115042838_mask.webp","disp":"Fuego_20241115042838_disp.webp","opt":"Fuego_20241115042838_opt.webp"},"geom":{"incidence":34.61003723325226,"grazing":55.38996276674774,"view_azimuth":229.825540174102,"look_dir":49.825540174102,"heading":4.667779553984815,"squint_off_broadside":44.84223937988281,"squint_exploitation":-44.84223937988281,"squint_engineering":45.15776062011719,"look_side":"right","orbit_state":"ascending","h_ref":3290.56590813004},"terrain":{"relief_m":2814.1888427734375,"dem_min":1153.6988525390625,"dem_max":3967.8876953125,"cot":1.4490393682892388,"disp_max_m":3096.404488351636,"disp_max_px":316.50750478474316,"disp_p99_m":2943.524269037484,"layover_pct":4.398395061728396,"shadow_pct":0.05049382716049383,"dem_source":"cop30_40d5fa90bb6a.tif"},"grid":{"size":900,"mpp":9.783036552190133,"span_m":8804.73289697112,"lat":14.468799959844542,"lon":-90.87670177210913,"crs":"+proj=tmerc +lat_0=14.46879996 +lon_0=-90.87670177 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Fuego_20241115042838_demdata.png","size":256,"min":1155.6851806640625,"max":3966.059814453125,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Fuego_20241203165725","stem":"2024-12-03-16-57-22_UMBRA-08","group":"Fuego","target":"Fuego","why":"fills the incidence range between the others","datetime":"2024-12-03T16:57:25.800000Z","platform":"Umbra-08","images":{"sar":"Fuego_20241203165725_sar.webp","dem":"Fuego_20241203165725_dem.webp","hill":"Fuego_20241203165725_hill.webp","sim":"Fuego_20241203165725_sim.webp","mask":"Fuego_20241203165725_mask.webp","disp":"Fuego_20241203165725_disp.webp","opt":"Fuego_20241203165725_opt.webp"},"geom":{"incidence":56.730099270166036,"grazing":33.269900729833964,"view_azimuth":299.38206060213724,"look_dir":119.38206060213724,"heading":192.66518575379803,"squint_off_broadside":16.71687484833923,"squint_exploitation":16.71687484833923,"squint_engineering":-73.28312515166077,"look_side":"left","orbit_state":"descending","h_ref":3211.4805124818336},"terrain":{"relief_m":2800.243896484375,"dem_min":1167.50341796875,"dem_max":3967.747314453125,"cot":0.6561254763609577,"disp_max_m":1341.1054448082832,"disp_max_px":141.8075951161292,"disp_p99_m":1272.974298820347,"layover_pct":0.12703703703703703,"shadow_pct":10.196543209876543,"dem_source":"cop30_40d5fa90bb6a.tif"},"grid":{"size":900,"mpp":9.457218731549775,"span_m":8511.496858394798,"lat":14.467299812918958,"lon":-90.87969850628464,"crs":"+proj=tmerc +lat_0=14.46729981 +lon_0=-90.87969851 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Fuego_20241203165725_demdata.png","size":256,"min":1169.9407958984375,"max":3964.55419921875,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Gamalama_20260421143811__borrowed_into_Nevado_del_Ruiz","stem":"2026-04-21-14-38-11_UMBRA-10","group":"Nevado_del_Ruiz","target":"Gamalama","why":"Borrowed from Gamalama. Nevado del Ruiz has nothing below 48 deg anywhere in the archive, so this is what a steep look does to comparable relief.","datetime":"2026-04-21T14:38:11.600000Z","platform":"Umbra-10","images":{"sar":"Gamalama_20260421143811_sar.webp","dem":"Gamalama_20260421143811_dem.webp","hill":"Gamalama_20260421143811_hill.webp","sim":"Gamalama_20260421143811_sim.webp","mask":"Gamalama_20260421143811_mask.webp","disp":"Gamalama_20260421143811_disp.webp","opt":"Gamalama_20260421143811_opt.webp"},"geom":{"incidence":16.600441474620027,"grazing":73.39955852537997,"view_azimuth":89.75953128084635,"look_dir":269.7595312808463,"heading":348.5888194674384,"squint_off_broadside":11.170711813407934,"squint_exploitation":11.170711813407934,"squint_engineering":-78.82928818659207,"look_side":"left","orbit_state":"ascending","h_ref":1471.3392041831714},"terrain":{"relief_m":1722.4735347628593,"dem_min":-0.9653560519218445,"dem_max":1721.5081787109375,"cot":3.3543389017561487,"disp_max_m":4938.608461629552,"disp_max_px":708.2645038403818,"disp_p99_m":4716.164839657535,"layover_pct":20.67851851851852,"shadow_pct":0.0,"dem_source":"cop30_da578d331219.tif"},"grid":{"size":900,"mpp":6.97283067957129,"span_m":6275.547611614161,"lat":0.7999971108529709,"lon":127.32999578303671,"crs":"+proj=tmerc +lat_0=0.79999711 +lon_0=127.32999578 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Gamalama_20260421143811_demdata.png","size":256,"min":-0.5943892002105713,"max":1720.7967529296875,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"},"borrowed":true,"borrowed_from":"Gamalama"},{"id":"Nevado_del_Ruiz_20260613160618","stem":"2026-06-13-16-06-18_UMBRA-10","group":"Nevado_del_Ruiz","target":"Nevado_del_Ruiz","why":"shallowest incidence here - the largest terrain displacement","datetime":"2026-06-13T16:06:18.900000Z","platform":"Umbra-10","images":{"sar":"Nevado_del_Ruiz_20260613160618_sar.webp","dem":"Nevado_del_Ruiz_20260613160618_dem.webp","hill":"Nevado_del_Ruiz_20260613160618_hill.webp","sim":"Nevado_del_Ruiz_20260613160618_sim.webp","mask":"Nevado_del_Ruiz_20260613160618_mask.webp","disp":"Nevado_del_Ruiz_20260613160618_disp.webp","opt":"Nevado_del_Ruiz_20260613160618_opt.webp"},"geom":{"incidence":48.367901336961765,"grazing":41.632098663038235,"view_azimuth":74.57252971243895,"look_dir":254.57252971243895,"heading":191.0348752704965,"squint_off_broadside":26.462345558057564,"squint_exploitation":-26.462345558057564,"squint_engineering":63.537654441942436,"look_side":"right","orbit_state":"descending","h_ref":5235.775583669925},"terrain":{"relief_m":1488.3818359375,"dem_min":3795.80810546875,"dem_max":5284.18994140625,"cot":0.888843878141764,"disp_max_m":1279.9062777223487,"disp_max_px":149.9424356052625,"disp_p99_m":1105.7633189179114,"layover_pct":0.3941975308641975,"shadow_pct":0.4403703703703704,"dem_source":"cop30_2eb5ccf06978.tif"},"grid":{"size":900,"mpp":8.535984309950933,"span_m":7682.38587895584,"lat":4.88999655131189,"lon":-75.32000292793228,"crs":"+proj=tmerc +lat_0=4.88999655 +lon_0=-75.32000293 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Nevado_del_Ruiz_20260613160618_demdata.png","size":256,"min":3799.9443359375,"max":5283.5712890625,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Nevado_del_Ruiz_20260614154953","stem":"2026-06-14-15-49-52_UMBRA-10","group":"Nevado_del_Ruiz","target":"Nevado_del_Ruiz","why":"steepest incidence here - displacement at its smallest","datetime":"2026-06-14T15:49:53.300000Z","platform":"Umbra-10","images":{"sar":"Nevado_del_Ruiz_20260614154953_sar.webp","dem":"Nevado_del_Ruiz_20260614154953_dem.webp","hill":"Nevado_del_Ruiz_20260614154953_hill.webp","sim":"Nevado_del_Ruiz_20260614154953_sim.webp","mask":"Nevado_del_Ruiz_20260614154953_mask.webp","disp":"Nevado_del_Ruiz_20260614154953_disp.webp","opt":"Nevado_del_Ruiz_20260614154953_opt.webp"},"geom":{"incidence":68.37048525383976,"grazing":21.62951474616024,"view_azimuth":74.90981175740998,"look_dir":254.90981175740998,"heading":190.53849758679192,"squint_off_broadside":25.628685829381936,"squint_exploitation":-25.628685829381936,"squint_engineering":64.37131417061806,"look_side":"right","orbit_state":"descending","h_ref":5235.775550478615},"terrain":{"relief_m":1483.721923828125,"dem_min":3800.432373046875,"dem_max":5284.154296875,"cot":0.3965240110849272,"disp_max_m":569.1480339986177,"disp_max_px":66.90096238527518,"disp_p99_m":491.54463247779887,"layover_pct":0.1291358024691358,"shadow_pct":11.935061728395063,"dem_source":"cop30_2eb5ccf06978.tif"},"grid":{"size":900,"mpp":8.507322072901697,"span_m":7656.589865611528,"lat":4.8899965592109655,"lon":-75.32000295279346,"crs":"+proj=tmerc +lat_0=4.88999656 +lon_0=-75.32000295 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Nevado_del_Ruiz_20260614154953_demdata.png","size":256,"min":3804.3115234375,"max":5283.6298828125,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Nevado_del_Ruiz_20260416044535","stem":"2026-04-16-04-45-33_UMBRA-10","group":"Nevado_del_Ruiz","target":"Nevado_del_Ruiz","why":"look direction furthest from the other passes over this target","datetime":"2026-04-16T04:45:35.300000Z","platform":"Umbra-10","images":{"sar":"Nevado_del_Ruiz_20260416044535_sar.webp","dem":"Nevado_del_Ruiz_20260416044535_dem.webp","hill":"Nevado_del_Ruiz_20260416044535_hill.webp","sim":"Nevado_del_Ruiz_20260416044535_sim.webp","mask":"Nevado_del_Ruiz_20260416044535_mask.webp","disp":"Nevado_del_Ruiz_20260416044535_disp.webp","opt":"Nevado_del_Ruiz_20260416044535_opt.webp"},"geom":{"incidence":68.10419214517353,"grazing":21.895807854826472,"view_azimuth":244.65826662270413,"look_dir":64.65826662270413,"heading":348.99125025832234,"squint_off_broadside":14.332983635618234,"squint_exploitation":-14.332983635618234,"squint_engineering":75.66701636438177,"look_side":"right","orbit_state":"ascending","h_ref":5235.776437694143},"terrain":{"relief_m":1592.626220703125,"dem_min":3691.509521484375,"dem_max":5284.1357421875,"cot":0.4019124343848938,"disp_max_m":620.6600756339208,"disp_max_px":67.15280162018696,"disp_p99_m":547.2965979120941,"layover_pct":0.12481481481481482,"shadow_pct":20.284197530864198,"dem_source":"cop30_2eb5ccf06978.tif"},"grid":{"size":900,"mpp":9.242504566590453,"span_m":8318.254109931408,"lat":4.890003881509582,"lon":-75.319999454103,"crs":"+proj=tmerc +lat_0=4.89000388 +lon_0=-75.31999945 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Nevado_del_Ruiz_20260416044535_demdata.png","size":256,"min":3693.191162109375,"max":5283.42578125,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Nevado_del_Ruiz_20260415165026","stem":"2026-04-15-16-50-24_UMBRA-10","group":"Nevado_del_Ruiz","target":"Nevado_del_Ruiz","why":"most heavily squinted pass available here","datetime":"2026-04-15T16:50:26.200000Z","platform":"Umbra-10","images":{"sar":"Nevado_del_Ruiz_20260415165026_sar.webp","dem":"Nevado_del_Ruiz_20260415165026_dem.webp","hill":"Nevado_del_Ruiz_20260415165026_hill.webp","sim":"Nevado_del_Ruiz_20260415165026_sim.webp","mask":"Nevado_del_Ruiz_20260415165026_mask.webp","disp":"Nevado_del_Ruiz_20260415165026_disp.webp","opt":"Nevado_del_Ruiz_20260415165026_opt.webp"},"geom":{"incidence":67.00867007907229,"grazing":22.991329920927708,"view_azimuth":289.65963209878106,"look_dir":109.65963209878106,"heading":192.32079112201183,"squint_off_broadside":7.338840976769248,"squint_exploitation":7.338840976769248,"squint_engineering":-82.66115902323075,"look_side":"left","orbit_state":"descending","h_ref":5235.771832033407},"terrain":{"relief_m":1541.4541015625,"dem_min":3742.6689453125,"dem_max":5284.123046875,"cot":0.4242962413287459,"disp_max_m":633.5179427527811,"disp_max_px":71.42110622138182,"disp_p99_m":550.2957342170832,"layover_pct":0.13,"shadow_pct":15.275802469135801,"dem_source":"cop30_2eb5ccf06978.tif"},"grid":{"size":900,"mpp":8.87017824659681,"span_m":7983.160421937128,"lat":4.8900017781851055,"lon":-75.31999613316154,"crs":"+proj=tmerc +lat_0=4.89000178 +lon_0=-75.31999613 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Nevado_del_Ruiz_20260415165026_demdata.png","size":256,"min":3746.75,"max":5283.37890625,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Gamalama_20260421143811","stem":"2026-04-21-14-38-11_UMBRA-10","group":"Gamalama","target":"Gamalama","why":"shallowest incidence here - the largest terrain displacement","datetime":"2026-04-21T14:38:11.600000Z","platform":"Umbra-10","images":{"sar":"Gamalama_20260421143811_sar.webp","dem":"Gamalama_20260421143811_dem.webp","hill":"Gamalama_20260421143811_hill.webp","sim":"Gamalama_20260421143811_sim.webp","mask":"Gamalama_20260421143811_mask.webp","disp":"Gamalama_20260421143811_disp.webp","opt":"Gamalama_20260421143811_opt.webp"},"geom":{"incidence":16.600441474620027,"grazing":73.39955852537997,"view_azimuth":89.75953128084635,"look_dir":269.7595312808463,"heading":348.5888194674384,"squint_off_broadside":11.170711813407934,"squint_exploitation":11.170711813407934,"squint_engineering":-78.82928818659207,"look_side":"left","orbit_state":"ascending","h_ref":1471.3392041831714},"terrain":{"relief_m":1722.4735347628593,"dem_min":-0.9653560519218445,"dem_max":1721.5081787109375,"cot":3.3543389017561487,"disp_max_m":4938.608461629552,"disp_max_px":708.2645038403818,"disp_p99_m":4716.164839657535,"layover_pct":20.67851851851852,"shadow_pct":0.0,"dem_source":"cop30_da578d331219.tif"},"grid":{"size":900,"mpp":6.97283067957129,"span_m":6275.547611614161,"lat":0.7999971108529709,"lon":127.32999578303671,"crs":"+proj=tmerc +lat_0=0.79999711 +lon_0=127.32999578 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Gamalama_20260421143811_demdata.png","size":256,"min":-0.5943892002105713,"max":1720.7967529296875,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Gamalama_20260418152053","stem":"2026-04-18-15-20-52_UMBRA-10","group":"Gamalama","target":"Gamalama","why":"steepest incidence here - displacement at its smallest","datetime":"2026-04-18T15:20:53.400000Z","platform":"Umbra-10","images":{"sar":"Gamalama_20260418152053_sar.webp","dem":"Gamalama_20260418152053_dem.webp","hill":"Gamalama_20260418152053_hill.webp","sim":"Gamalama_20260418152053_sim.webp","mask":"Gamalama_20260418152053_mask.webp","disp":"Gamalama_20260418152053_disp.webp","opt":"Gamalama_20260418152053_opt.webp"},"geom":{"incidence":69.93762462260543,"grazing":20.06237537739457,"view_azimuth":248.6957839823199,"look_dir":68.69578398231991,"heading":348.4307138383009,"squint_off_broadside":9.734929855981022,"squint_exploitation":-9.734929855981022,"squint_engineering":80.26507014401898,"look_side":"right","orbit_state":"ascending","h_ref":1471.341410535783},"terrain":{"relief_m":1722.893075466156,"dem_min":-1.4803557395935059,"dem_max":1721.4127197265625,"cot":0.36520359810415615,"disp_max_m":537.879808409886,"disp_max_px":59.817196756190945,"disp_p99_m":537.3391771673123,"layover_pct":0.011975308641975308,"shadow_pct":18.78333333333333,"dem_source":"cop30_da578d331219.tif"},"grid":{"size":900,"mpp":8.992059768401244,"span_m":8092.85379156112,"lat":0.800003647669618,"lon":127.33000020579719,"crs":"+proj=tmerc +lat_0=0.80000365 +lon_0=127.33000021 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Gamalama_20260418152053_demdata.png","size":256,"min":-0.6199342012405396,"max":1719.910400390625,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Gamalama_20260601152105","stem":"2026-06-01-15-21-04_UMBRA-10","group":"Gamalama","target":"Gamalama","why":"look direction furthest from the other passes over this target","datetime":"2026-06-01T15:21:05.100000Z","platform":"Umbra-10","images":{"sar":"Gamalama_20260601152105_sar.webp","dem":"Gamalama_20260601152105_dem.webp","hill":"Gamalama_20260601152105_hill.webp","sim":"Gamalama_20260601152105_sim.webp","mask":"Gamalama_20260601152105_mask.webp","disp":"Gamalama_20260601152105_disp.webp","opt":"Gamalama_20260601152105_opt.webp"},"geom":{"incidence":67.0028508261736,"grazing":22.997149173826397,"view_azimuth":243.51178390396,"look_dir":63.51178390396001,"heading":348.43277093504474,"squint_off_broadside":14.920987031084735,"squint_exploitation":-14.920987031084735,"squint_engineering":75.07901296891526,"look_side":"right","orbit_state":"ascending","h_ref":1471.341811153102},"terrain":{"relief_m":1722.99285030365,"dem_min":-1.4869909286499023,"dem_max":1721.505859375,"cot":0.42441609611215747,"disp_max_m":625.0922504210826,"disp_max_px":67.12860741131658,"disp_p99_m":624.4611475361908,"layover_pct":0.010617283950617284,"shadow_pct":12.372962962962964,"dem_source":"cop30_da578d331219.tif"},"grid":{"size":900,"mpp":9.311860837376825,"span_m":8380.674753639143,"lat":0.8000037851574775,"lon":127.32999988729904,"crs":"+proj=tmerc +lat_0=0.80000379 +lon_0=127.32999989 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Gamalama_20260601152105_demdata.png","size":256,"min":-0.6338954567909241,"max":1719.4908447265625,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Gamalama_20260623022018","stem":"2026-06-23-02-20-17_UMBRA-10","group":"Gamalama","target":"Gamalama","why":"most heavily squinted pass available here","datetime":"2026-06-23T02:20:18.200000Z","platform":"Umbra-10","images":{"sar":"Gamalama_20260623022018_sar.webp","dem":"Gamalama_20260623022018_dem.webp","hill":"Gamalama_20260623022018_hill.webp","sim":"Gamalama_20260623022018_sim.webp","mask":"Gamalama_20260623022018_mask.webp","disp":"Gamalama_20260623022018_disp.webp","opt":"Gamalama_20260623022018_opt.webp"},"geom":{"incidence":66.65152885923725,"grazing":23.34847114076275,"view_azimuth":74.61472998361577,"look_dir":254.61472998361577,"heading":191.14108235136476,"squint_off_broadside":26.526352367748984,"squint_exploitation":-26.526352367748984,"squint_engineering":63.473647632251016,"look_side":"right","orbit_state":"descending","h_ref":1471.3408646972562},"terrain":{"relief_m":1722.927213549614,"dem_min":-1.4639567136764526,"dem_max":1721.4632568359375,"cot":0.431671294688011,"disp_max_m":635.7675640812022,"disp_max_px":74.4706632541067,"disp_p99_m":635.1356159912422,"layover_pct":0.11259259259259258,"shadow_pct":18.013333333333335,"dem_source":"cop30_da578d331219.tif"},"grid":{"size":900,"mpp":8.537154582763067,"span_m":7683.43912448676,"lat":0.7999965048142677,"lon":127.32999663380001,"crs":"+proj=tmerc +lat_0=0.79999650 +lon_0=127.32999663 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Gamalama_20260623022018_demdata.png","size":256,"min":-0.622146487236023,"max":1719.4945068359375,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"Gamalama_20260622023701","stem":"2026-06-22-02-37-01_UMBRA-10","group":"Gamalama","target":"Gamalama","why":"fills the incidence range between the others","datetime":"2026-06-22T02:37:01.800000Z","platform":"Umbra-10","images":{"sar":"Gamalama_20260622023701_sar.webp","dem":"Gamalama_20260622023701_dem.webp","hill":"Gamalama_20260622023701_hill.webp","sim":"Gamalama_20260622023701_sim.webp","mask":"Gamalama_20260622023701_mask.webp","disp":"Gamalama_20260622023701_disp.webp","opt":"Gamalama_20260622023701_opt.webp"},"geom":{"incidence":42.79485876092622,"grazing":47.20514123907378,"view_azimuth":78.29619644053618,"look_dir":258.29619644053616,"heading":191.3348485047128,"squint_off_broadside":23.03865206417663,"squint_exploitation":-23.03865206417663,"squint_engineering":66.96134793582337,"look_side":"right","orbit_state":"descending","h_ref":1471.3404874196153},"terrain":{"relief_m":1722.5037778615952,"dem_min":-1.0379575490951538,"dem_max":1721.4658203125,"cot":1.0800961604299186,"disp_max_m":1590.3103051104783,"disp_max_px":193.75249993087797,"disp_p99_m":1589.1892111470115,"layover_pct":0.447283950617284,"shadow_pct":0.005432098765432099,"dem_source":"cop30_da578d331219.tif"},"grid":{"size":900,"mpp":8.207947281598061,"span_m":7387.152553438255,"lat":0.7999966318420778,"lon":127.32999640907653,"crs":"+proj=tmerc +lat_0=0.79999663 +lon_0=127.32999641 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"Gamalama_20260622023701_demdata.png","size":256,"min":-0.30745550990104675,"max":1720.3330078125,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"EEFIT_Quimbaya_20260909163257","stem":"2026-09-09-16-32-57_UMBRA-09","group":"EEFIT_Quimbaya","target":"EEFIT_Quimbaya","why":"shallowest incidence here - the largest terrain displacement","datetime":"2026-09-09T16:32:57.700000Z","platform":"Umbra-09","images":{"sar":"EEFIT_Quimbaya_20260909163257_sar.webp","dem":"EEFIT_Quimbaya_20260909163257_dem.webp","hill":"EEFIT_Quimbaya_20260909163257_hill.webp","sim":"EEFIT_Quimbaya_20260909163257_sim.webp","mask":"EEFIT_Quimbaya_20260909163257_mask.webp","disp":"EEFIT_Quimbaya_20260909163257_disp.webp","opt":"EEFIT_Quimbaya_20260909163257_opt.webp"},"geom":{"incidence":14.222735514009656,"grazing":75.77726448599034,"view_azimuth":139.1311873458892,"look_dir":319.1311873458892,"heading":191.44375378296064,"squint_off_broadside":37.68743356292856,"squint_exploitation":37.68743356292856,"squint_engineering":127.68743356292856,"look_side":"right","orbit_state":"descending","h_ref":1361.6215556670163},"terrain":{"relief_m":424.9254150390625,"dem_min":1184.7703857421875,"dem_max":1609.69580078125,"cot":3.9453776641581197,"disp_max_m":978.7465857265842,"disp_max_px":99.92325726228572,"disp_p99_m":823.4276962982796,"layover_pct":9.262839506172838,"shadow_pct":0.0,"dem_source":"Copernicus_DSM_COG_10_N04_00_W076_00_DEM.tif"},"grid":{"size":900,"mpp":9.794982795221538,"span_m":8815.484515699383,"lat":4.643840266481348,"lon":-75.75272319679954,"crs":"+proj=tmerc +lat_0=4.64384027 +lon_0=-75.75272320 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"EEFIT_Quimbaya_20260909163257_demdata.png","size":256,"min":1185.8321533203125,"max":1608.8740234375,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"EEFIT_Quimbaya_20260910035817","stem":"2026-09-10-03-58-16_UMBRA-10","group":"EEFIT_Quimbaya","target":"EEFIT_Quimbaya","why":"steepest incidence here - displacement at its smallest","datetime":"2026-09-10T03:58:17.300000Z","platform":"Umbra-10","images":{"sar":"EEFIT_Quimbaya_20260910035817_sar.webp","dem":"EEFIT_Quimbaya_20260910035817_dem.webp","hill":"EEFIT_Quimbaya_20260910035817_hill.webp","sim":"EEFIT_Quimbaya_20260910035817_sim.webp","mask":"EEFIT_Quimbaya_20260910035817_mask.webp","disp":"EEFIT_Quimbaya_20260910035817_disp.webp","opt":"EEFIT_Quimbaya_20260910035817_opt.webp"},"geom":{"incidence":68.58255011047899,"grazing":21.41744988952101,"view_azimuth":57.96253422322193,"look_dir":237.96253422322192,"heading":347.6230147021581,"squint_off_broadside":19.660480478936222,"squint_exploitation":-19.660480478936222,"squint_engineering":-109.66048047893622,"look_side":"left","orbit_state":"ascending","h_ref":1361.6277492100867},"terrain":{"relief_m":422.690185546875,"dem_min":1186.9556884765625,"dem_max":1609.6458740234375,"cot":0.39224708933393554,"disp_max_m":97.2843875600976,"disp_max_px":10.165310027928703,"disp_p99_m":80.36236883016666,"layover_pct":0.13246913580246913,"shadow_pct":3.8501234567901235,"dem_source":"Copernicus_DSM_COG_10_N04_00_W076_00_DEM.tif"},"grid":{"size":900,"mpp":9.57023320418299,"span_m":8613.209883764692,"lat":4.643836052966556,"lon":-75.75272032873106,"crs":"+proj=tmerc +lat_0=4.64383605 +lon_0=-75.75272033 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"EEFIT_Quimbaya_20260910035817_demdata.png","size":256,"min":1188.19140625,"max":1608.73974609375,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"EEFIT_Quimbaya_20260909044147","stem":"2026-09-09-04-41-47_UMBRA-09","group":"EEFIT_Quimbaya","target":"EEFIT_Quimbaya","why":"look direction furthest from the other passes over this target","datetime":"2026-09-09T04:41:47.700000Z","platform":"Umbra-09","images":{"sar":"EEFIT_Quimbaya_20260909044147_sar.webp","dem":"EEFIT_Quimbaya_20260909044147_dem.webp","hill":"EEFIT_Quimbaya_20260909044147_hill.webp","sim":"EEFIT_Quimbaya_20260909044147_sim.webp","mask":"EEFIT_Quimbaya_20260909044147_mask.webp","disp":"EEFIT_Quimbaya_20260909044147_disp.webp","opt":"EEFIT_Quimbaya_20260909044147_opt.webp"},"geom":{"incidence":35.92768139120295,"grazing":54.07231860879705,"view_azimuth":230.82811585733495,"look_dir":50.82811585733495,"heading":348.7063327522469,"squint_off_broadside":27.87821689491193,"squint_exploitation":-27.87821689491193,"squint_engineering":62.12178310508807,"look_side":"right","orbit_state":"ascending","h_ref":1361.6280121455488},"terrain":{"relief_m":424.783447265625,"dem_min":1184.9873046875,"dem_max":1609.770751953125,"cot":1.3800416200183272,"disp_max_m":342.44730863983364,"disp_max_px":35.05184899060492,"disp_p99_m":287.5484123695667,"layover_pct":0.16654320987654322,"shadow_pct":0.0,"dem_source":"Copernicus_DSM_COG_10_N04_00_W076_00_DEM.tif"},"grid":{"size":900,"mpp":9.769735934090699,"span_m":8792.76234068163,"lat":4.64384395003072,"lon":-75.75271886244909,"crs":"+proj=tmerc +lat_0=4.64384395 +lon_0=-75.75271886 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"EEFIT_Quimbaya_20260909044147_demdata.png","size":256,"min":1186.3370361328125,"max":1608.8502197265625,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"EEFIT_Quimbaya_20260909041438","stem":"2026-09-09-04-14-37_UMBRA-10","group":"EEFIT_Quimbaya","target":"EEFIT_Quimbaya","why":"most heavily squinted pass available here","datetime":"2026-09-09T04:14:38.300000Z","platform":"Umbra-10","images":{"sar":"EEFIT_Quimbaya_20260909041438_sar.webp","dem":"EEFIT_Quimbaya_20260909041438_dem.webp","hill":"EEFIT_Quimbaya_20260909041438_hill.webp","sim":"EEFIT_Quimbaya_20260909041438_sim.webp","mask":"EEFIT_Quimbaya_20260909041438_mask.webp","disp":"EEFIT_Quimbaya_20260909041438_disp.webp","opt":"EEFIT_Quimbaya_20260909041438_opt.webp"},"geom":{"incidence":54.24309523858582,"grazing":35.75690476141418,"view_azimuth":122.64025902294141,"look_dir":302.6402590229414,"heading":348.36668574243015,"squint_off_broadside":44.273573280511215,"squint_exploitation":44.273573280511215,"squint_engineering":-45.726426719488785,"look_side":"left","orbit_state":"ascending","h_ref":1361.6218220101687},"terrain":{"relief_m":423.286865234375,"dem_min":1186.5081787109375,"dem_max":1609.7950439453125,"cot":0.7200799702243588,"disp_max_m":178.70456626154154,"disp_max_px":18.628875549597517,"disp_p99_m":147.81716577166006,"layover_pct":0.13567901234567903,"shadow_pct":0.0662962962962963,"dem_source":"Copernicus_DSM_COG_10_N04_00_W076_00_DEM.tif"},"grid":{"size":900,"mpp":9.592879923737668,"span_m":8633.5919313639,"lat":4.643839094713679,"lon":-75.75272271185648,"crs":"+proj=tmerc +lat_0=4.64383909 +lon_0=-75.75272271 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"EEFIT_Quimbaya_20260909041438_demdata.png","size":256,"min":1187.47216796875,"max":1608.3232421875,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}},{"id":"EEFIT_Quimbaya_20260909160427","stem":"2026-09-09-16-04-26_UMBRA-10","group":"EEFIT_Quimbaya","target":"EEFIT_Quimbaya","why":"fills the incidence range between the others","datetime":"2026-09-09T16:04:27Z","platform":"Umbra-10","images":{"sar":"EEFIT_Quimbaya_20260909160427_sar.webp","dem":"EEFIT_Quimbaya_20260909160427_dem.webp","hill":"EEFIT_Quimbaya_20260909160427_hill.webp","sim":"EEFIT_Quimbaya_20260909160427_sim.webp","mask":"EEFIT_Quimbaya_20260909160427_mask.webp","disp":"EEFIT_Quimbaya_20260909160427_disp.webp","opt":"EEFIT_Quimbaya_20260909160427_opt.webp"},"geom":{"incidence":65.85593581320799,"grazing":24.144064186792,"view_azimuth":109.79487940127184,"look_dir":289.7948794012718,"heading":190.98205096168977,"squint_off_broadside":8.812828439582063,"squint_exploitation":8.812828439582063,"squint_engineering":98.81282843958206,"look_side":"right","orbit_state":"descending","h_ref":1361.6227107980699},"terrain":{"relief_m":397.7491455078125,"dem_min":1192.485595703125,"dem_max":1590.2347412109375,"cot":0.44824488747394486,"disp_max_m":102.47417384760591,"disp_max_px":11.532815534311025,"disp_p99_m":87.30727950990386,"layover_pct":0.12876543209876543,"shadow_pct":1.8225925925925928,"dem_source":"Copernicus_DSM_COG_10_N04_00_W076_00_DEM.tif"},"grid":{"size":900,"mpp":8.88544289490604,"span_m":7996.898605415437,"lat":4.643838152804337,"lon":-75.75272217221934,"crs":"+proj=tmerc +lat_0=4.64383815 +lon_0=-75.75272217 +k=1 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs"},"demdata":{"file":"EEFIT_Quimbaya_20260909160427_demdata.png","size":256,"min":1194.0048828125,"max":1589.5738525390625,"note":"height = min + (R*256+G)/65535 * (max-min); B=0 means nodata"}}]</script>
+<script>
+"use strict";
+const SCENES = JSON.parse(document.getElementById("scene-data").textContent);
+const D2R=Math.PI/180, R2D=180/Math.PI;
+const $=id=>document.getElementById(id);
+const n360=a=>((a%360)+360)%360;
+const fmt=(v,d=1)=>(v==null||Number.isNaN(v))?"—":v.toFixed(d);
+const deg=(v,d=1)=>fmt(v,d)+"°";
+const css=n=>getComputedStyle(document.documentElement).getPropertyValue(n).trim();
+const groups=[...new Set(SCENES.map(s=>s.group))];
+
+let group=groups[0], idx=0, layer="sar", overlay="none", probe=null;
+const demCache={};
+
+function cur(){ return SCENES.filter(s=>s.group===group)[idx]; }
+
+/* ---------- DEM heights, decoded from the 16-bit PNG ---------- */
+function loadDem(sc){
+  return new Promise(res=>{
+    if (!sc.demdata){ res(null); return; }
+    if (demCache[sc.id]){ res(demCache[sc.id]); return; }
+    const im=new Image();
+    im.onload=()=>{
+      const n=sc.demdata.size, c=document.createElement("canvas");
+      c.width=n; c.height=n;
+      const g=c.getContext("2d",{willReadFrequently:true});
+      g.drawImage(im,0,0);
+      let d=null;
+      try{ d=g.getImageData(0,0,n,n).data; }catch(e){ d=null; }
+      demCache[sc.id]=d?{data:d,size:n,min:sc.demdata.min,max:sc.demdata.max}:null;
+      res(demCache[sc.id]);
+    };
+    im.onerror=()=>{ demCache[sc.id]=null; res(null); };
+    im.src=sc.demdata.file;
+  });
+}
+function heightAt(sc,u,v){
+  const d=demCache[sc.id];
+  if(!d) return null;
+  const x=Math.max(0,Math.min(d.size-1,Math.round(u*(d.size-1))));
+  const y=Math.max(0,Math.min(d.size-1,Math.round(v*(d.size-1))));
+  const i=(y*d.size+x)*4;
+  if(d.data[i+2]<128) return null;
+  const q=d.data[i]*256+d.data[i+1];
+  return d.min+(q/65535)*(d.max-d.min);
+}
+
+/* ---------- tabs and chips ---------- */
+function buildTabs(){
+  $("tabs").innerHTML=groups.map(g=>{
+    const n=SCENES.filter(s=>s.group===g).length;
+    return `<button role="tab" data-g="${g}" aria-selected="${g===group}">${g.replace(/_/g," ")}
+      <span style="font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--faint)"> ${n}</span></button>`;
+  }).join("");
+  $("tabs").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    group=b.dataset.g; idx=0; probe=null; buildTabs(); buildStrip(); load();
+  }));
+}
+function buildStrip(){
+  const ss=SCENES.filter(s=>s.group===group);
+  $("strip").innerHTML=ss.map((s,i)=>{
+    const g=s.geom,t=s.terrain;
+    const lw=Math.max(2,Math.round(t.layover_pct)), sw=Math.max(2,Math.round(t.shadow_pct));
+    const bor = s.borrowed ? ' borrowed' : '';
+    return `<button class="chip${bor}" role="tab" data-i="${i}" aria-selected="${i===idx}">
+      ${s.borrowed?`<span class="btag">from ${s.borrowed_from.replace(/_/g," ")}</span>`:""}
+      <span class="t1">θ ${fmt(g.incidence,0)}°</span>
+      <span class="t2">${g.orbit_state.slice(0,4).toUpperCase()} · ${g.look_side.toUpperCase()} · sq ${g.squint_exploitation>=0?"+":""}${fmt(g.squint_exploitation,0)}°</span>
+      <span class="t2">lay ${fmt(t.layover_pct,0)}% · shd ${fmt(t.shadow_pct,0)}%</span>
+      <span class="bars"><i style="background:var(--layover);width:${lw*1.3}px"></i>
+        <i style="background:var(--shadow);width:${sw*1.3}px"></i></span>
+    </button>`;
+  }).join("");
+  $("strip").querySelectorAll(".chip").forEach(b=>b.addEventListener("click",()=>{
+    idx=+b.dataset.i; probe=null; buildStrip(); load();
+  }));
+}
+
+/* ---------- layers ---------- */
+const LAYER_LABEL={sar:"SAR",sim:"Simulated",opt:"Optical",dem:"DEM",hill:"Hillshade"};
+function buildLayers(){
+  const sc=cur();
+  const ks=["sar","sim","opt","dem","hill"].filter(k=>sc.images[k]);
+  $("layers").innerHTML=ks.map(k=>`<button type="button" data-k="${k}" aria-pressed="${k===layer}">${LAYER_LABEL[k]}</button>`).join("");
+  $("layers").querySelectorAll("button").forEach(b=>b.addEventListener("click",()=>{
+    layer=b.dataset.k; paint();
+  }));
+}
+function paint(){
+  const sc=cur();
+  if(!sc.images[layer]) layer="sar";
+  $("imgBase").src=sc.images[layer];
+  const ovkey = overlay==="mask" ? "mask" : overlay==="disp" ? "disp" : null;
+  if(ovkey && sc.images[ovkey]){
+    $("imgOv").src=sc.images[ovkey];
+    $("imgOv").style.opacity=String((+$("ovop").value)/100);
+    $("imgOv").style.display="";
+  } else { $("imgOv").style.display="none"; }
+  $("layers").querySelectorAll("button").forEach(b=>b.setAttribute("aria-pressed",String(b.dataset.k===layer)));
+  const t=sc.terrain,g=sc.grid;
+  $("badge").textContent=`${fmt(g.span_m/1000,1)} km across · ${fmt(g.mpp,1)} m/px · north up · ${LAYER_LABEL[layer]}`;
+  drawProbe();
+}
+
+/* ---------- the probe: click the terrain, see where the radar puts it ---------- */
+const NS="http://www.w3.org/2000/svg";
+function el(t,a){const e=document.createElementNS(NS,t);for(const k in a)e.setAttribute(k,a[k]);return e;}
+function drawProbe(){
+  const svg=$("probe"); svg.innerHTML="";
+  const sc=cur(),g=sc.geom,grid=sc.grid;
+  // north arrow
+  const gg=el("g",{}); svg.appendChild(gg);
+  gg.appendChild(el("line",{x1:952,y1:96,x2:952,y2:34,stroke:"#E8EEF5","stroke-width":4,"stroke-linecap":"round"}));
+  gg.appendChild(el("polygon",{points:"952,22 944,42 960,42",fill:"#E8EEF5"}));
+  const nt=el("text",{x:952,y:118,fill:"#E8EEF5","font-family":"'JetBrains Mono',monospace",
+    "font-size":"20","font-weight":"700","text-anchor":"middle"}); nt.textContent="N"; gg.appendChild(nt);
+
+  if(!probe) return;
+  const h=heightAt(sc,probe.u,probe.v);
+  if(h==null) return;
+  const dh=h-g.h_ref;
+  const cot=1/Math.tan(Math.max(g.incidence,0.5)*D2R);
+  const dispM=-dh*cot;                                  // signed, along look_dir
+  const dispPx=dispM/grid.mpp;                          // in grid pixels
+  const a=g.look_dir*D2R;
+  const x1=probe.u*1000, y1=probe.v*1000;
+  const k=1000/grid.size;                               // grid px -> viewBox units
+  const x2=x1+Math.sin(a)*dispPx*k, y2=y1-Math.cos(a)*dispPx*k;
+  const col=dh>=0?css("--layover"):css("--track");
+  gg.appendChild(el("circle",{cx:x1,cy:y1,r:9,fill:"none",stroke:"#FFFFFF","stroke-width":4}));
+  gg.appendChild(el("circle",{cx:x1,cy:y1,r:3.5,fill:"#FFFFFF"}));
+  const L=Math.hypot(x2-x1,y2-y1);
+  if(L>6){
+    const ang=Math.atan2(y2-y1,x2-x1), hl=Math.min(38,Math.max(16,L*0.16)), hw=hl*0.55;
+    const bx=x2-Math.cos(ang)*hl, by=y2-Math.sin(ang)*hl;
+    gg.appendChild(el("line",{x1,y1,x2:bx,y2:by,stroke:col,"stroke-width":7,"stroke-linecap":"round"}));
+    const px=-Math.sin(ang),py=Math.cos(ang);
+    gg.appendChild(el("polygon",{points:`${x2},${y2} ${bx+px*hw/2},${by+py*hw/2} ${bx-px*hw/2},${by-py*hw/2}`,fill:col}));
+    gg.appendChild(el("circle",{cx:x2,cy:y2,r:6,fill:col,stroke:"#FFFFFF","stroke-width":2.5}));
+  }
+  const tx=el("text",{x:Math.min(940,Math.max(60,x2)),y:Math.max(30,y2-22),fill:col,
+    "font-family":"'JetBrains Mono',monospace","font-size":"25","font-weight":"700",
+    "text-anchor":x2>500?"end":"start","paint-order":"stroke",stroke:"rgba(8,11,15,.8)","stroke-width":"5"});
+  tx.textContent=(dispM>=0?"+":"−")+fmt(Math.abs(dispM),0)+" m";
+  gg.appendChild(tx);
+
+  const toward = dh>=0 ? "toward the sensor" : "away from the sensor";
+  const az = dh>=0 ? n360(g.look_dir+180) : g.look_dir;
+  $("probeText").innerHTML =
+    `That point stands <span class="big">${fmt(Math.abs(dh),0)} m</span> `+
+    `${dh>=0?"above":"below"} this scene's reference plane of ${fmt(g.h_ref,0)} m. `+
+    `With cot&thinsp;&theta; = ${fmt(cot,2)} at ${deg(g.incidence,1)} incidence, the GEC product `+
+    `puts it <span class="big">${fmt(Math.abs(dispM),0)} m</span> `+
+    `(${fmt(Math.abs(dispPx),0)} px) ${toward}, along azimuth ${deg(az,0)}. `+
+    `<span class="hint">The radar measured the range correctly. Only the assumed height was wrong.</span>`;
+}
+function bindProbe(){
+  const svg=$("probe");
+  const go=ev=>{
+    const r=svg.getBoundingClientRect();
+    const cx=(ev.touches?ev.touches[0].clientX:ev.clientX)-r.left;
+    const cy=(ev.touches?ev.touches[0].clientY:ev.clientY)-r.top;
+    probe={u:Math.max(0,Math.min(1,cx/r.width)),v:Math.max(0,Math.min(1,cy/r.height))};
+    drawProbe();
+  };
+  svg.addEventListener("pointerdown",e=>{e.preventDefault();go(e);});
+  svg.addEventListener("pointermove",e=>{ if(e.buttons&1){e.preventDefault();go(e);} });
+}
+
+/* ---------- readouts ---------- */
+function fillGeom(){
+  const sc=cur(),g=sc.geom,t=sc.terrain,grid=sc.grid;
+  $("stageTitle").textContent=sc.target.replace(/_/g," ");
+  const bn=$("borrowNote");
+  if(sc.borrowed){
+    bn.hidden=false;
+    bn.innerHTML=`<p class="borrowbar" style="margin-top:12px">Showing <b>${sc.target.replace(/_/g," ")}</b>, `+
+      `not ${group.replace(/_/g," ")} — borrowed into this tab because ${group.replace(/_/g," ")} `+
+      `has no acquisition this steep. Everything below describes ${sc.target.replace(/_/g," ")}.</p>`;
+  } else bn.hidden=true;
+  $("whyTag").textContent=sc.why||"";
+  const sw=c=>`<span class="sw" style="background:${c}"></span>`;
+  $("geomTable").innerHTML=`
+   <tr><td>${sw("var(--los)")}GEC reference height</td><td>${fmt(g.h_ref,1)} m</td></tr>
+   <tr><td>Terrain here</td><td>${fmt(t.dem_min,0)} – ${fmt(t.dem_max,0)} m (${fmt(t.relief_m,0)} m relief)</td></tr>
+   <tr><td>Incidence / grazing</td><td>${deg(g.incidence,1)} / ${deg(g.grazing,1)}</td></tr>
+   <tr><td>cot&thinsp;&theta; &mdash; metres per metre</td><td>${fmt(t.cot,2)}</td></tr>
+   <tr><td>${sw("var(--track)")}Line of sight (ground)</td><td>${deg(g.look_dir,1)}</td></tr>
+   <tr><td>Track heading</td><td>${deg(g.heading,1)}</td></tr>
+   <tr><td>Squint off broadside</td><td>${deg(g.squint_off_broadside,1)}</td></tr>
+   <tr><td>Orbit / look side</td><td>${g.orbit_state} · ${g.look_side}</td></tr>
+   <tr><td>${sw("var(--layover)")}Layover</td><td>${fmt(t.layover_pct,1)}% of the scene</td></tr>
+   <tr><td>${sw("var(--shadow)")}Shadow</td><td>${fmt(t.shadow_pct,1)}% of the scene</td></tr>
+   <tr><td>Peak displacement</td><td>${fmt(t.disp_max_m,0)} m (${fmt(t.disp_max_px,0)} px)</td></tr>
+   <tr><td>Acquired</td><td>${(sc.datetime||"").slice(0,16).replace("T"," ")}Z · ${sc.platform}</td></tr>
+   <tr><td>Terrain model</td><td>COP30 30 m</td></tr>`;
+
+  // Say plainly what this target can and cannot show. Incidence coverage is a
+  // property of how the archive was tasked, not of the mountain, and a student
+  // otherwise reads a missing regime as a missing effect.
+  const gs=SCENES.filter(s=>s.group===group);
+  const own=gs.filter(s=>!s.borrowed);          // what this target actually holds
+  const vis=gs.filter(s=>s.borrowed);
+  const imin=Math.min(...own.map(s=>s.geom.incidence)), imax=Math.max(...own.map(s=>s.geom.incidence));
+  const anyLay=own.some(s=>s.terrain.layover_pct>1), anyShd=own.some(s=>s.terrain.shadow_pct>1);
+  let cov=`These ${own.length} acquisitions span ${fmt(imin,0)}–${fmt(imax,0)}° incidence. `;
+  if(anyLay&&anyShd) cov+=`That covers both regimes: layover at the steep-looking end, shadow at the shallow-grazing end.`;
+  else if(!anyLay&&anyShd) cov+=`Every pass here looks shallowly, so this target shows shadow but <b>never layover</b> — not because the terrain is too gentle, but because the archive holds no steeper-looking acquisition over it. Layover would need an incidence below roughly the local slope.`;
+  else if(anyLay&&!anyShd) cov+=`Every pass here looks steeply, so this target shows layover but <b>no shadow</b> — shadow needs the grazing angle to drop below the back-slope.`;
+  else cov+=`The relief here is too gentle for either regime at these angles.`;
+  if(vis.length){
+    const v=vis[0];
+    cov+=` The dashed card is <b>not this volcano</b>: it is ${v.target.replace(/_/g," ")} at `+
+      `${deg(v.geom.incidence,0)}, borrowed so the missing regime is visible. Its relief `+
+      `(${fmt(v.terrain.relief_m,0)} m) is close to this target's `+
+      `(${fmt(Math.min(...own.map(s=>s.terrain.relief_m)),0)}–${fmt(Math.max(...own.map(s=>s.terrain.relief_m)),0)} m), `+
+      `so incidence is the only large difference between them.`;
+  }
+  $("coverage").innerHTML=cov;
+
+  const hrefs=[...new Set(own.map(s=>Math.round(s.geom.h_ref)))];
+  $("thesisEv").innerHTML =
+    `${group.replace(/_/g," ")}: ${own.length} acquisitions, `+
+    `reference plane${hrefs.length>1?"s":""} at ${hrefs.sort((a,b)=>a-b).join(" / ")} m `+
+    `&mdash; ${hrefs.length>1?"the same ground geocoded to "+hrefs.length+" different planes":"one plane for every pass"}. `+
+    `Footprint corners agree to within 7 mm on all 1,157 scenes in the archive.`;
+}
+
+/* ---------- the cross-geometry chart ---------- */
+function drawResp(){
+  const cv=$("resp"),ctx=cv.getContext("2d");
+  const DPR=Math.min(2,window.devicePixelRatio||1);
+  const W=cv.clientWidth||760,H=300;
+  if(cv.width!==W*DPR){cv.width=W*DPR;cv.height=H*DPR;}
+  ctx.setTransform(DPR,0,0,DPR,0,0); ctx.clearRect(0,0,W,H);
+  const ss=SCENES.filter(s=>s.group===group).slice().sort((a,b)=>a.geom.incidence-b.geom.incidence);
+  if(!ss.length) return;
+  const padL=44,padR=54,padT=16,padB=40;
+  const gw=W-padL-padR,gh=H-padT-padB;
+  const inc=ss.map(s=>s.geom.incidence);
+  const i0=Math.max(0,Math.min(...inc)-6), i1=Math.min(90,Math.max(...inc)+6);
+  const X=v=>padL+(v-i0)/Math.max(i1-i0,1e-6)*gw;
+  const Y=p=>padT+gh-(p/100)*gh;
+  const muteC=css("--muted"),ruleC=css("--rule"),layC=css("--layover"),shC=css("--shadow"),losC=css("--los");
+  ctx.strokeStyle=ruleC;ctx.lineWidth=1;
+  ctx.font="500 10px 'JetBrains Mono',monospace";ctx.fillStyle=muteC;
+  for(let p=0;p<=100;p+=25){
+    ctx.globalAlpha=.5;ctx.beginPath();ctx.moveTo(padL,Y(p));ctx.lineTo(padL+gw,Y(p));ctx.stroke();
+    ctx.globalAlpha=1;ctx.textAlign="right";ctx.fillText(p+"%",padL-7,Y(p)+3);
+  }
+  // displacement axis on the right
+  const dmax=Math.max(...ss.map(s=>s.terrain.disp_max_m),1);
+  ctx.textAlign="left";
+  ctx.fillStyle=losC;
+  ctx.fillText((dmax/1000).toFixed(1)+" km",padL+gw+8,Y(100)+3);
+  ctx.fillText("0",padL+gw+8,Y(0)+3);
+  // series
+  const line=(key,col,scale)=>{
+    ctx.strokeStyle=col;ctx.lineWidth=2.2;ctx.beginPath();
+    ss.forEach((s,i)=>{const x=X(s.geom.incidence),y=Y(scale(s));i?ctx.lineTo(x,y):ctx.moveTo(x,y);});
+    ctx.stroke();
+    ss.forEach(s=>{const x=X(s.geom.incidence),y=Y(scale(s));
+      ctx.fillStyle=col;ctx.beginPath();ctx.arc(x,y,4,0,7);ctx.fill();
+      if(s===cur()){ctx.strokeStyle="#fff";ctx.lineWidth=2;ctx.beginPath();ctx.arc(x,y,7,0,7);ctx.stroke();}
+    });
+  };
+  line("lay",layC,s=>s.terrain.layover_pct);
+  line("shd",shC,s=>s.terrain.shadow_pct);
+  ctx.setLineDash([5,4]);
+  line("disp",losC,s=>s.terrain.disp_max_m/dmax*100);
+  ctx.setLineDash([]);
+  // x axis
+  ctx.strokeStyle=ruleC;ctx.beginPath();ctx.moveTo(padL,padT+gh);ctx.lineTo(padL+gw,padT+gh);ctx.stroke();
+  ctx.fillStyle=muteC;ctx.textAlign="center";
+  ss.forEach(s=>{const x=X(s.geom.incidence);
+    ctx.fillText(fmt(s.geom.incidence,0)+"°",x,padT+gh+15);});
+  ctx.fillText("INCIDENCE ANGLE",padL+gw/2,padT+gh+33);
+}
+
+/* ---------- wiring ---------- */
+async function load(){
+  buildLayers(); paint(); fillGeom(); drawResp();
+  const sc=cur();
+  $("probeText").innerHTML=`Click anywhere on the image. The tool reads the COP30 height
+    there and works out where that point appears in this GEC product.`;
+  await loadDem(sc);
+  drawProbe();
+}
+function bind(){
+  $("ovsel").addEventListener("change",()=>{overlay=$("ovsel").value;paint();});
+  $("ovop").addEventListener("input",()=>{$("imgOv").style.opacity=String((+$("ovop").value)/100);});
+  $("themeBtn").addEventListener("click",()=>{
+    const c=document.documentElement.getAttribute("data-theme");
+    const dark=c?c==="dark":window.matchMedia("(prefers-color-scheme: dark)").matches;
+    document.documentElement.setAttribute("data-theme",dark?"light":"dark");
+    try{localStorage.setItem("summit-theme",dark?"light":"dark");}catch(e){}
+    drawResp();drawProbe();
+  });
+  window.addEventListener("resize",drawResp);
+  window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change",drawResp);
+}
+function prov(){
+  $("prov").innerHTML=`Amplitude: Umbra X-band spotlight GEC, from the archive on rsde-02.
+    Topography: Copernicus GLO-30 (COP30), 30 m. Optical: Esri World Imagery.
+    The simulation projects COP30 through each scene's own look vector into slant range,
+    marks layover and shadow, and resamples back onto the GEC grid the amplitude uses, so
+    every layer here is pixel-registered. Geometry is read from each scene's
+    <code>*.stac.v2.json</code> sidecar; the reference height is the elevation carried by the
+    footprint polygon. The simulator is checked against the closed form
+    <code>&minus;(h&minus;h_ref)&middot;cot&theta;</code> to within 15 m over displacements of
+    0.5&ndash;1.7 km, and its layover and shadow thresholds are verified on synthetic ramps.`;
+}
+try{const t=localStorage.getItem("summit-theme"); if(t)document.documentElement.setAttribute("data-theme",t);}catch(e){}
+buildTabs(); buildStrip(); bindProbe(); bind(); prov(); load();
+</script>
